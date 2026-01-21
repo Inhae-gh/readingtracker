@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books by Language</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .chart-container {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            margin: 30px auto;
+        }
+        .breakdown {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .breakdown h2 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .error {
+            color: #d32f2f;
+            padding: 20px;
+            background-color: #ffebee;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Books by Language</h1>
+        
+        <div id="loading" class="loading">Loading data from Google Sheet...</div>
+        <div id="error" class="error" style="display: none;"></div>
+        
+        <div id="content" style="display: none;">
+            <div class="chart-container">
+                <canvas id="languageChart"></canvas>
+            </div>
+            
+            <div class="breakdown">
+                <h2>Total Books:</h2>
+                <div id="totalBooks" style="font-size: 20px; font-weight: bold; color: #1976d2;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variable for Google Sheet ID - fill this in with your sheet ID
+        const GOOGLE_SHEET_ID = '1-QlSBppK4BSNrnxBVriFiaMvOAPsQXdjEnRDn4hxs6A'; // Replace with your Google Sheet ID
+        
+        // If using a CSV export URL instead, use this:
+        const GOOGLE_SHEET_CSV_URL = ''; // Or provide a direct CSV export URL
+    </script>
+    <script src="chart.js"></script>
+</body>
+</html>
