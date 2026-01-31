@@ -25,10 +25,18 @@ function loadBookstatsModules() {
     if (!window.BookStats.createTimelineChart) requiredModules.push('bookstats-chart-timeline.js');
     if (!window.BookStats.createDurationChart) requiredModules.push('bookstats-chart-duration.js');
 
+    // Determine base URL for modules
+    // If bookstats.js is loaded from a CDN or specific path, use that as the base
+    let baseUrl = '';
+    const currentScript = document.currentScript;
+    if (currentScript && currentScript.src) {
+        baseUrl = currentScript.src.substring(0, currentScript.src.lastIndexOf('/') + 1);
+    }
+
     // Load missing modules
     requiredModules.forEach(module => {
         const script = document.createElement('script');
-        script.src = module;
+        script.src = baseUrl + module;
         script.async = false;
         document.head.appendChild(script);
     });
