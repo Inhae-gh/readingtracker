@@ -201,11 +201,65 @@ BookStats.injectStyles = function() {
     document.head.appendChild(style);
 };
 
-BookStats.createAppStructure = function() {
+BookStats.createYearFilterDropdown = function(years) {
+    const yearSelectStyle = document.createElement('style');
+    yearSelectStyle.textContent = `
+        .year-filter-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .year-filter-label {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        .year-filter-select {
+            padding: 8px 12px;
+            border: 2px solid #1976d2;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: white;
+            color: #333;
+            cursor: pointer;
+            min-width: 150px;
+            transition: border-color 0.2s;
+        }
+        .year-filter-select:hover {
+            border-color: #1565c0;
+        }
+        .year-filter-select:focus {
+            outline: none;
+            border-color: #1565c0;
+            box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
+        }
+    `;
+    document.head.appendChild(yearSelectStyle);
+};
+
+BookStats.createAppStructure = function(years) {
     const root = document.getElementById('bookstats-root');
+    
+    let yearFilterHTML = '';
+    if (years && years.length > 0) {
+        const mostRecentYear = years[0];
+        yearFilterHTML = `
+        <div class="year-filter-container">
+            <label class="year-filter-label">Filter by Year:</label>
+            <select id="bookstats-yearFilter" class="year-filter-select">
+                <option value="all">All Time</option>
+                ${years.map(year => `<option value="${year}" ${year === mostRecentYear ? 'selected' : ''}>${year}</option>`).join('')}
+            </select>
+        </div>
+        `;
+    }
+    
     root.innerHTML = `
         <div class="bookstats-wrapper">
             <h1>📚 Books by Language</h1>
+            ${yearFilterHTML}
             
             <div id="bookstats-loading" class="loading">Loading data from Google Sheet...</div>
             <div id="bookstats-error" class="error" style="display: none;"></div>

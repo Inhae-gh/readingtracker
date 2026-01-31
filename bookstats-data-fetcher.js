@@ -98,3 +98,68 @@ BookStats.parseCSVLine = function(line) {
     result.push(current);
     return result;
 };
+
+// Extract all years from data
+BookStats.extractYears = function(data) {
+    const yearsSet = new Set();
+    
+    data.forEach(book => {
+        // Check start date
+        if (book.startDate) {
+            try {
+                const year = new Date(book.startDate).getFullYear();
+                if (!isNaN(year)) yearsSet.add(year);
+            } catch (e) {
+                // Invalid date, skip
+            }
+        }
+        
+        // Check finish date
+        if (book.finishDate) {
+            try {
+                const year = new Date(book.finishDate).getFullYear();
+                if (!isNaN(year)) yearsSet.add(year);
+            } catch (e) {
+                // Invalid date, skip
+            }
+        }
+    });
+    
+    // Sort years in descending order
+    return Array.from(yearsSet).sort((a, b) => b - a);
+};
+
+// Filter data by year (include books where start or end date is in the year)
+BookStats.filterDataByYear = function(data, year) {
+    if (year === 'all') {
+        return data;
+    }
+    
+    const yearNum = parseInt(year);
+    
+    return data.filter(book => {
+        let bookYear = null;
+        
+        // Check start date
+        if (book.startDate) {
+            try {
+                bookYear = new Date(book.startDate).getFullYear();
+                if (bookYear === yearNum) return true;
+            } catch (e) {
+                // Invalid date, continue checking
+            }
+        }
+        
+        // Check finish date
+        if (book.finishDate) {
+            try {
+                bookYear = new Date(book.finishDate).getFullYear();
+                if (bookYear === yearNum) return true;
+            } catch (e) {
+                // Invalid date, continue checking
+            }
+        }
+        
+        return false;
+    });
+};

@@ -46,7 +46,6 @@ async function initializeBookStats() {
 
         // Inject styles and create UI
         BookStats.injectStyles();
-        BookStats.createAppStructure();
         
         // Validate that sheet ID is provided
         if (!GOOGLE_SHEET_ID && !GOOGLE_SHEET_CSV_URL) {
@@ -55,28 +54,52 @@ async function initializeBookStats() {
         }
 
         // Fetch data from Google Sheet
-        const data = await BookStats.fetchSheetData();
+        const allData = await BookStats.fetchSheetData();
         
-        if (!data || data.length === 0) {
+        if (!allData || allData.length === 0) {
             BookStats.showError('No data found in the Google Sheet');
             return;
         }
 
-        // Process data to count books by language
-        const languageCounts = BookStats.processLanguageData(data);
+        // Extract available years
+        const years = BookStats.extractYears(allData);
+        
+        // Create UI with year filter dropdown
+        BookStats.createAppStructure(years);
+        BookStats.createYearFilterDropdown(years);
+        
+        // Function to update all charts with filtered data
+        const updateCharts = (selectedYear) => {
+            const filteredData = BookStats.filterDataByYear(allData, selectedYear);
+            
+            // Process data to count books by language
+            const languageCounts = BookStats.processLanguageData(filteredData);
 
-        // Create charts
-        BookStats.createPieChart(languageCounts);
-        BookStats.createTimelineChart(data);
-        BookStats.createDurationChart(data);
+            // Create/update charts
+            BookStats.createPieChart(languageCounts);
+            BookStats.createTimelineChart(filteredData);
+            BookStats.createDurationChart(filteredData);
 
+            // Display total books
+            const total = Object.values(languageCounts).reduce((a, b) => a + b, 0);
+            document.getElementById('bookstats-totalBooks').textContent = total + ' books';
+        };
+        
         // Show content and hide loading
         document.getElementById('bookstats-loading').style.display = 'none';
         document.getElementById('bookstats-content').style.display = 'block';
         
-        // Display total books
-        const total = Object.values(languageCounts).reduce((a, b) => a + b, 0);
-        document.getElementById('bookstats-totalBooks').textContent = total + ' books';
+        // Initial chart creation with most recent year selected
+        const mostRecentYear = years.length > 0 ? years[0] : 'all';
+        updateCharts(mostRecentYear);
+        
+        // Add event listener for year filter dropdown
+        const yearFilter = document.getElementById('bookstats-yearFilter');
+        if (yearFilter) {
+            yearFilter.addEventListener('change', (event) => {
+                updateCharts(event.target.value);
+            });
+        }
 
     } catch (error) {
         console.error('BookStats Error:', error);
