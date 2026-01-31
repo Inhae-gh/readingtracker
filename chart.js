@@ -87,9 +87,9 @@ function parseCSV(csv) {
     // Parse header
     const headers = parseCSVLine(lines[0]);
     const languageIndex = headers.findIndex(h => h.toLowerCase() === 'language');
-    const nameIndex = headers.findIndex(h => h.toLowerCase() === 'name');
-    const startDateIndex = headers.findIndex(h => h.toLowerCase() === 'startdate');
-    const finishDateIndex = headers.findIndex(h => h.toLowerCase() === 'finishdate');
+    const nameIndex = headers.findIndex(h => h.toLowerCase() === 'title');
+    const startDateIndex = headers.findIndex(h => h.toLowerCase() === 'started');
+    const finishDateIndex = headers.findIndex(h => h.toLowerCase() === 'finished');
 
     if (languageIndex === -1) {
         throw new Error('Could not find "language" column in the sheet');
