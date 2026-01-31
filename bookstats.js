@@ -26,11 +26,22 @@ function loadBookstatsModules() {
     if (!window.BookStats.createDurationChart) requiredModules.push('bookstats-chart-duration.js');
 
     // Determine base URL for modules
-    // If bookstats.js is loaded from a CDN or specific path, use that as the base
     let baseUrl = '';
-    const currentScript = document.currentScript;
-    if (currentScript && currentScript.src) {
-        baseUrl = currentScript.src.substring(0, currentScript.src.lastIndexOf('/') + 1);
+    
+    // Method 1: Check if user explicitly set BOOKSTATS_BASE_URL
+    if (typeof BOOKSTATS_BASE_URL !== 'undefined') {
+        baseUrl = BOOKSTATS_BASE_URL;
+        if (!baseUrl.endsWith('/')) baseUrl += '/';
+    } else {
+        // Method 2: Try to find the script in the DOM
+        const bookstatsScript = Array.from(document.scripts).find(script => 
+            script.src && (script.src.includes('bookstats.js') || script.src.includes('bookstats@'))
+        );
+        
+        if (bookstatsScript && bookstatsScript.src) {
+            baseUrl = bookstatsScript.src.substring(0, bookstatsScript.src.lastIndexOf('/') + 1);
+        }
+        // else: baseUrl stays empty, which will load relative to current page URL
     }
 
     // Load missing modules
