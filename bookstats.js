@@ -1,7 +1,7 @@
-// Chart.js - Handles data fetching, styling, and chart creation
+// BookStats.js - Handles data fetching, styling, and chart creation
 
 // Inject styles
-function injectStyles() {
+function injectBookstatsStyles() {
     const style = document.createElement('style');
     style.textContent = `
         * {
@@ -16,7 +16,7 @@ function injectStyles() {
             padding: 20px;
             background-color: #f5f5f5;
         }
-        .container {
+        .bookstats-wrapper {
             background-color: white;
             border-radius: 8px;
             padding: 30px;
@@ -201,33 +201,33 @@ function injectStyles() {
 }
 
 // Create the initial app HTML structure
-function createAppStructure() {
-    const app = document.getElementById('app');
-    app.innerHTML = `
-        <div class="container">
+function createBookstatsAppStructure() {
+    const root = document.getElementById('bookstats-root');
+    root.innerHTML = `
+        <div class="bookstats-wrapper">
             <h1>📚 Books by Language</h1>
             
-            <div id="loading" class="loading">Loading data from Google Sheet...</div>
-            <div id="error" class="error" style="display: none;"></div>
+            <div id="bookstats-loading" class="loading">Loading data from Google Sheet...</div>
+            <div id="bookstats-error" class="error" style="display: none;"></div>
             
-            <div id="content" style="display: none;">
+            <div id="bookstats-content" style="display: none;">
                 <div class="chart-container">
-                    <canvas id="languageChart"></canvas>
+                    <canvas id="bookstats-languageChart"></canvas>
                 </div>
                 
                 <div class="breakdown">
                     <h2>Total Books:</h2>
-                    <div id="totalBooks" style="font-size: 20px; font-weight: bold; color: #1976d2;"></div>
+                    <div id="bookstats-totalBooks" style="font-size: 20px; font-weight: bold; color: #1976d2;"></div>
                 </div>
 
                 <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
                     <h2 style="text-align: center; color: #333;">📖 Reading Timeline</h2>
-                    <div id="timeline" style="margin-top: 30px;"></div>
+                    <div id="bookstats-timeline" style="margin-top: 30px;"></div>
                 </div>
 
                 <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
                     <h2 style="text-align: center; color: #333;">📊 Books by Duration</h2>
-                    <div id="durationChart" style="margin-top: 30px;"></div>
+                    <div id="bookstats-durationChart" style="margin-top: 30px;"></div>
                 </div>
             </div>
         </div>
@@ -239,10 +239,10 @@ let chartInstance = null;
 async function initializeChart() {
     try {
         // Inject styles first
-        injectStyles();
+        injectBookstatsStyles();
         
         // Create initial HTML structure
-        createAppStructure();
+        createBookstatsAppStructure();
         
         // Validate that sheet ID is provided
         if (!GOOGLE_SHEET_ID && !GOOGLE_SHEET_CSV_URL) {
@@ -271,12 +271,12 @@ async function initializeChart() {
         createDurationChart(data);
 
         // Show content and hide loading
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('content').style.display = 'block';
+        document.getElementById('bookstats-loading').style.display = 'none';
+        document.getElementById('bookstats-content').style.display = 'block';
         
         // Display total books
         const total = Object.values(languageCounts).reduce((a, b) => a + b, 0);
-        document.getElementById('totalBooks').textContent = total + ' books';
+        document.getElementById('bookstats-totalBooks').textContent = total + ' books';
 
     } catch (error) {
         console.error('Error:', error);
@@ -408,7 +408,7 @@ function processLanguageData(data) {
 }
 
 function createChart(languageCounts) {
-    const ctx = document.getElementById('languageChart').getContext('2d');
+    const ctx = document.getElementById('bookstats-languageChart').getContext('2d');
     
     const labels = [
         'Korean',
@@ -474,8 +474,8 @@ function createChart(languageCounts) {
 }
 
 function showError(message) {
-    document.getElementById('loading').style.display = 'none';
-    const errorDiv = document.getElementById('error');
+    document.getElementById('bookstats-loading').style.display = 'none';
+    const errorDiv = document.getElementById('bookstats-error');
     errorDiv.textContent = message;
     errorDiv.style.display = 'block';
 }
@@ -491,7 +491,7 @@ function createTimeline(data) {
     const booksWithDates = normalizedData.filter(book => book.startDate && book.finishDate);
 
     if (booksWithDates.length === 0) {
-        document.getElementById('timeline').innerHTML = '<p style="color: #999; text-align: center;">No books with dates available</p>';
+        document.getElementById('bookstats-timeline').innerHTML = '<p style="color: #999; text-align: center;">No books with dates available</p>';
         return;
     }
 
@@ -589,7 +589,7 @@ function createTimeline(data) {
     });
 
     timelineHTML += '</div></div></div>';
-    document.getElementById('timeline').innerHTML = timelineHTML;
+    document.getElementById('bookstats-timeline').innerHTML = timelineHTML;
 }
 
 function normalizeLanguage(language) {
@@ -618,7 +618,7 @@ function createDurationChart(data) {
         .sort((a, b) => b.days - a.days); // Sort by duration, longest first
 
     if (booksWithDuration.length === 0) {
-        document.getElementById('durationChart').innerHTML = '<p style="color: #999; text-align: center;">No books with dates available</p>';
+        document.getElementById('bookstats-durationChart').innerHTML = '<p style="color: #999; text-align: center;">No books with dates available</p>';
         return;
     }
 
@@ -646,7 +646,7 @@ function createDurationChart(data) {
     });
 
     chartHTML += '</div>';
-    document.getElementById('durationChart').innerHTML = chartHTML;
+    document.getElementById('bookstats-durationChart').innerHTML = chartHTML;
 }
 
 // Initialize when page loads
