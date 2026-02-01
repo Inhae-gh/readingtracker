@@ -145,25 +145,13 @@ BookStats.filterDataByYear = function(data, year) {
     const yearNum = parseInt(year);
     
     return data.filter(book => {
-        let bookYear = null;
-        
-        // Check start date
-        if (book.startDate) {
-            try {
-                bookYear = new Date(book.startDate).getFullYear();
-                if (bookYear === yearNum) return true;
-            } catch (e) {
-                // Invalid date, continue checking
-            }
-        }
-        
-        // Check finish date
+        // Check only finish date
         if (book.finishDate) {
             try {
-                bookYear = new Date(book.finishDate).getFullYear();
+                const bookYear = new Date(book.finishDate).getFullYear();
                 if (bookYear === yearNum) return true;
             } catch (e) {
-                // Invalid date, continue checking
+                // Invalid date, skip
             }
         }
         
