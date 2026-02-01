@@ -29,9 +29,26 @@ BookStats.injectStyles = function() {
         }
         .chart-container {
             position: relative;
-            width: 500px;
-            height: 500px;
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            aspect-ratio: 1;
             margin: 30px auto;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                max-width: 100%;
+                margin: 20px auto;
+            }
+        }
+        @media (max-width: 480px) {
+            .bookstats-wrapper {
+                padding: 15px;
+            }
+            .chart-container {
+                max-width: 100%;
+                margin: 15px auto;
+            }
         }
         .breakdown {
             margin-top: 30px;

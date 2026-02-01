@@ -47,9 +47,9 @@ BookStats.createPieChart = function(languageCounts) {
                     position: 'bottom',
                     labels: {
                         font: {
-                            size: 14
+                            size: window.innerWidth < 480 ? 12 : 14
                         },
-                        padding: 20
+                        padding: window.innerWidth < 480 ? 10 : 20
                     }
                 },
                 tooltip: {
