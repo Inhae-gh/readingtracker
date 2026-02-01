@@ -312,17 +312,17 @@ BookStats.createAppStructure = function(years) {
                 </div>
 
                 <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
-                    <h2 style="text-align: center;">When I Read</h2>
+                    <h2 style="text-align: center;">Timeline</h2>
                     <div id="bookstats-timeline" style="margin-top: 30px;"></div>
                 </div>
 
                 <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
-                    <h2 style="text-align: center;">Reading Pace</h2>
+                    <h2 style="text-align: center;">Book Duration</h2>
                     <div id="bookstats-durationChart" style="margin-top: 30px;"></div>
                 </div>
 
                 <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
-                    <h2 style="text-align: center;">Monthly Progress</h2>
+                    <h2 style="text-align: center;">Books and Pages per Month</h2>
                     <div class="monthly-chart-container">
                         <canvas id="bookstats-monthlyChart"></canvas>
                     </div>
