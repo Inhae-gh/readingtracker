@@ -47,6 +47,7 @@ BookStats.parseCSV = function(csv) {
     const nameIndex = headers.findIndex(h => h.toLowerCase() === 'title');
     const startDateIndex = headers.findIndex(h => h.toLowerCase() === 'started');
     const finishDateIndex = headers.findIndex(h => h.toLowerCase() === 'finished');
+    const pagesIndex = headers.findIndex(h => h.toLowerCase() === 'pages');
 
     if (languageIndex === -1) {
         throw new Error('Could not find "language" column in the sheet');
@@ -62,7 +63,8 @@ BookStats.parseCSV = function(csv) {
                     name: nameIndex !== -1 ? values[nameIndex].trim() : `Book ${i}`,
                     language: values[languageIndex].trim(),
                     startDate: startDateIndex !== -1 ? values[startDateIndex].trim() : '',
-                    finishDate: finishDateIndex !== -1 ? values[finishDateIndex].trim() : ''
+                    finishDate: finishDateIndex !== -1 ? values[finishDateIndex].trim() : '',
+                    pages: pagesIndex !== -1 ? parseInt(values[pagesIndex].trim()) || 0 : 0
                 });
             }
         }

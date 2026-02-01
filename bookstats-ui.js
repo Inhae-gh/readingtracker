@@ -197,6 +197,12 @@ BookStats.injectStyles = function() {
         .duration-bar-chinese {
             background-color: ${BookStats.colors.chineseDark.bg};
         }
+        .monthly-chart-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin: 30px 0;
+        }
     `;
     document.head.appendChild(style);
 };
@@ -282,6 +288,13 @@ BookStats.createAppStructure = function(years) {
                 <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
                     <h2 style="text-align: center; color: #333;">📊 Books by Duration</h2>
                     <div id="bookstats-durationChart" style="margin-top: 30px;"></div>
+                </div>
+
+                <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
+                    <h2 style="text-align: center; color: #333;">📈 Books & Pages Per Month</h2>
+                    <div class="monthly-chart-container">
+                        <canvas id="bookstats-monthlyChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
