@@ -11,21 +11,25 @@ BookStats.injectStyles = function() {
             box-sizing: border-box;
         }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f5f5f5;
+            background-color: #faf8f3;
         }
         .bookstats-wrapper {
-            background-color: white;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
         }
         h1 {
-            color: #333;
+            color: #2c3e50;
             text-align: center;
+            font-size: 2.2em;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
         }
         .chart-container {
             position: relative;
@@ -53,13 +57,17 @@ BookStats.injectStyles = function() {
         .breakdown {
             margin-top: 30px;
             padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
+            background-color: #fdfbf7;
+            border-radius: 8px;
+            border-left: 4px solid #d9c6a7;
         }
         .breakdown h2 {
-            color: #333;
-            font-size: 16px;
-            margin-bottom: 15px;
+            color: #2c3e50;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .breakdown-item {
             display: flex;
@@ -281,7 +289,7 @@ BookStats.createAppStructure = function(years) {
     
     root.innerHTML = `
         <div class="bookstats-wrapper">
-            <h1>📚 Books by Language</h1>
+            <h1>My Reading Journey</h1>
             ${yearFilterHTML}
             
             <div id="bookstats-loading" class="loading">Loading data from Google Sheet...</div>
@@ -293,22 +301,22 @@ BookStats.createAppStructure = function(years) {
                 </div>
                 
                 <div class="breakdown">
-                    <h2>Total Books:</h2>
+                    <h2>Books Read</h2>
                     <div id="bookstats-totalBooks" style="font-size: 20px; font-weight: bold; color: #1976d2;"></div>
                 </div>
 
                 <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
-                    <h2 style="text-align: center; color: #333;">📖 Reading Timeline</h2>
+                    <h2 style="text-align: center; color: #333;">When I Read</h2>
                     <div id="bookstats-timeline" style="margin-top: 30px;"></div>
                 </div>
 
                 <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
-                    <h2 style="text-align: center; color: #333;">📊 Books by Duration</h2>
+                    <h2 style="text-align: center; color: #333;">Reading Pace</h2>
                     <div id="bookstats-durationChart" style="margin-top: 30px;"></div>
                 </div>
 
                 <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
-                    <h2 style="text-align: center; color: #333;">📈 Books & Pages Per Month</h2>
+                    <h2 style="text-align: center; color: #333;">Monthly Progress</h2>
                     <div class="monthly-chart-container">
                         <canvas id="bookstats-monthlyChart"></canvas>
                     </div>
