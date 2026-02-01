@@ -48,6 +48,7 @@ BookStats.parseCSV = function(csv) {
     const startDateIndex = headers.findIndex(h => h.toLowerCase() === 'started');
     const finishDateIndex = headers.findIndex(h => h.toLowerCase() === 'finished');
     const pagesIndex = headers.findIndex(h => h.toLowerCase() === 'pages');
+    const dnfIndex = headers.findIndex(h => h.toLowerCase() === 'dnf');
 
     if (languageIndex === -1) {
         throw new Error('Could not find "language" column in the sheet');
@@ -59,12 +60,16 @@ BookStats.parseCSV = function(csv) {
         if (lines[i].trim()) {
             const values = BookStats.parseCSVLine(lines[i]);
             if (values[languageIndex]) {
+                const dnfValue = dnfIndex !== -1 ? values[dnfIndex].trim().toLowerCase() : '';
+                const isDNF = dnfValue === 'true' || dnfValue === 'yes' || dnfValue === '1' || dnfValue === 'x';
+                
                 data.push({
                     name: nameIndex !== -1 ? values[nameIndex].trim() : `Book ${i}`,
                     language: values[languageIndex].trim(),
                     startDate: startDateIndex !== -1 ? values[startDateIndex].trim() : '',
                     finishDate: finishDateIndex !== -1 ? values[finishDateIndex].trim() : '',
-                    pages: pagesIndex !== -1 ? parseInt(values[pagesIndex].trim()) || 0 : 0
+                    pages: pagesIndex !== -1 ? parseInt(values[pagesIndex].trim()) || 0 : 0,
+                    dnf: isDNF
                 });
             }
         }
@@ -164,4 +169,9 @@ BookStats.filterDataByYear = function(data, year) {
         
         return false;
     });
+};
+
+// Remove DNF (Did Not Finish) books from data
+BookStats.removeDNFBooks = function(data) {
+    return data.filter(book => !book.dnf);
 };

@@ -75,10 +75,18 @@ async function initializeBookStats() {
         }
 
         // Fetch data from Google Sheet
-        const allData = await BookStats.fetchSheetData();
+        let allData = await BookStats.fetchSheetData();
         
         if (!allData || allData.length === 0) {
             BookStats.showError('No data found in the Google Sheet');
+            return;
+        }
+
+        // Remove DNF books
+        allData = BookStats.removeDNFBooks(allData);
+        
+        if (allData.length === 0) {
+            BookStats.showError('No completed books found in the Google Sheet');
             return;
         }
 
