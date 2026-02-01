@@ -31,6 +31,12 @@ BookStats.injectStyles = function() {
             letter-spacing: 0.5px;
             margin-bottom: 10px;
         }
+        h2 {
+            color: #2c3e50;
+            font-size: 1.1em;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
         .chart-container {
             position: relative;
             width: 100%;
@@ -289,7 +295,7 @@ BookStats.createAppStructure = function(years) {
     
     root.innerHTML = `
         <div class="bookstats-wrapper">
-            <h1>Books by Language</h1>
+            <h2 style="text-align: center; margin-bottom: 20px;" >Books by Language</h2>
             ${yearFilterHTML}
             
             <div id="bookstats-loading" class="loading">Loading data from Google Sheet...</div>
@@ -306,17 +312,17 @@ BookStats.createAppStructure = function(years) {
                 </div>
 
                 <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
-                    <h2 style="text-align: center; color: #333;"> Timeline </h2>
+                    <h2 style="text-align: center;">When I Read</h2>
                     <div id="bookstats-timeline" style="margin-top: 30px;"></div>
                 </div>
 
                 <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
-                    <h2 style="text-align: center; color: #333;"> Books by Duration </h2>
+                    <h2 style="text-align: center;">Reading Pace</h2>
                     <div id="bookstats-durationChart" style="margin-top: 30px;"></div>
                 </div>
 
                 <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
-                    <h2 style="text-align: center; color: #333;"> Books and Pages per Month</h2>
+                    <h2 style="text-align: center;">Monthly Progress</h2>
                     <div class="monthly-chart-container">
                         <canvas id="bookstats-monthlyChart"></canvas>
                     </div>
