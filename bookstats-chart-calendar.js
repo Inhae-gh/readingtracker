@@ -86,6 +86,25 @@ BookStats.parseLocalDate = function(dateStr) {
     return new Date(dateStr);
 };
 
+// Helper to normalize image URLs (supports =IMAGE("...") formulas)
+BookStats.extractImageUrl = function(url) {
+    if (!url || typeof url !== 'string') return '';
+    const trimmed = url.trim();
+    if (!trimmed) return '';
+
+    // Handle Google Sheets IMAGE formula: =IMAGE("url", ...)
+    const imageMatch = trimmed.match(/^=IMAGE\((.*)\)$/i);
+    if (imageMatch && imageMatch[1]) {
+        // Take the first argument before any comma
+        const firstArg = imageMatch[1].split(',')[0].trim();
+        const unquoted = firstArg.replace(/^['"]|['"]$/g, '');
+        return unquoted.trim();
+    }
+
+    // Strip surrounding quotes if present
+    return trimmed.replace(/^['"]|['"]$/g, '');
+};
+
 // Get list of available months from the data
 BookStats.getAvailableMonths = function(booksWithDates) {
     const monthSet = new Set();
@@ -113,6 +132,52 @@ BookStats.generateMonthCalendar = function(year, month, booksWithDates) {
     const daysInMonth = lastDay.getDate();
     const startDayOfWeek = firstDay.getDay(); // 0 = Sunday
 
+    // First pass: collect all books for each day and identify which books have URLs
+    const dayBookMap = {};
+    for (let day = 1; day <= daysInMonth; day++) {
+        dayBookMap[day] = [];
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+        const cellDate = new Date(year, month, day);
+        const booksOnDay = booksWithDates.filter(book => {
+            const bookStart = BookStats.parseLocalDate(book.startDate);
+            const bookFinish = BookStats.parseLocalDate(book.finishDate);
+            return bookStart <= cellDate && bookFinish >= cellDate;
+        });
+        dayBookMap[day] = booksOnDay;
+    }
+
+    // Second pass: assign image placement (one image per day, preferring the first book with URL)
+    const dayImageMap = {}; // day -> book with URL to display
+    const usedBooks = new Set();
+
+    for (let day = 1; day <= daysInMonth; day++) {
+        if (!dayImageMap[day]) {
+            // Find the first book on this day with a URL that hasn't been used yet
+            const book = dayBookMap[day].find(b => BookStats.extractImageUrl(b.url) && !usedBooks.has(b.name));
+            if (book) {
+                dayImageMap[day] = book;
+                usedBooks.add(book.name);
+            }
+        }
+    }
+
+    // Third pass: if an image couldn't fit on its first day, push it to the next available day
+    for (let day = 1; day <= daysInMonth; day++) {
+        const book = dayBookMap[day].find(b => BookStats.extractImageUrl(b.url) && !usedBooks.has(b.name));
+        if (book) {
+            let nextDay = day;
+            while (nextDay <= daysInMonth && dayImageMap[nextDay]) {
+                nextDay++;
+            }
+            if (nextDay <= daysInMonth) {
+                dayImageMap[nextDay] = book;
+                usedBooks.add(book.name);
+            }
+        }
+    }
+
     let html = '<div class="calendar-view">';
     
     // Calendar header with day names
@@ -131,21 +196,12 @@ BookStats.generateMonthCalendar = function(year, month, booksWithDates) {
         html += '<div class="calendar-cell calendar-cell-empty"></div>';
     }
 
-    // Filter books for this month
-    const monthStart = new Date(year, month, 1);
-    const monthEnd = new Date(year, month + 1, 0, 23, 59, 59);
-
     // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
         const cellDate = new Date(year, month, day);
         const isToday = this.isSameDay(cellDate, new Date());
-        
-        // Find books that overlap with this day
-        const booksOnDay = booksWithDates.filter(book => {
-            const bookStart = BookStats.parseLocalDate(book.startDate);
-            const bookFinish = BookStats.parseLocalDate(book.finishDate);
-            return bookStart <= cellDate && bookFinish >= cellDate;
-        });
+        const booksOnDay = dayBookMap[day];
+        const imageBook = dayImageMap[day];
 
         const todayClass = isToday ? ' calendar-cell-today' : '';
         html += `<div class="calendar-cell${todayClass}">`;
@@ -181,6 +237,16 @@ BookStats.generateMonthCalendar = function(year, month, booksWithDates) {
                 html += `<div class="${markerClass} calendar-book-${langClass}" title="${title}"></div>`;
             });
             html += '</div>';
+        }
+
+        // Place image if assigned to this day
+        if (imageBook) {
+            const imageUrl = BookStats.extractImageUrl(imageBook.url);
+            if (imageUrl) {
+                html += `<div class="calendar-image-container">`;
+                html += `<img src="${imageUrl}" alt="${imageBook.name}" class="calendar-book-image" title="${imageBook.name}">`;
+                html += `</div>`;
+            }
         }
         
         html += '</div>';

@@ -43,15 +43,21 @@ BookStats.parseCSV = function(csv) {
 
     // Parse header
     const headers = BookStats.parseCSVLine(lines[0]);
-    const languageIndex = headers.findIndex(h => h.toLowerCase() === 'language');
-    const nameIndex = headers.findIndex(h => h.toLowerCase() === 'title');
-    const startDateIndex = headers.findIndex(h => h.toLowerCase() === 'started');
-    const finishDateIndex = headers.findIndex(h => h.toLowerCase() === 'finished');
-    const pagesIndex = headers.findIndex(h => h.toLowerCase() === 'pages');
-    const dnfIndex = headers.findIndex(h => h.toLowerCase() === 'dnf');
+    const normalizedHeaders = headers.map(h => h.trim().toLowerCase());
+    const languageIndex = normalizedHeaders.findIndex(h => h === 'language');
+    const nameIndex = normalizedHeaders.findIndex(h => h === 'title');
+    const startDateIndex = normalizedHeaders.findIndex(h => h === 'started');
+    const finishDateIndex = normalizedHeaders.findIndex(h => h === 'finished');
+    const pagesIndex = normalizedHeaders.findIndex(h => h === 'pages');
+    const dnfIndex = normalizedHeaders.findIndex(h => h === 'dnf');
+    const urlIndex = normalizedHeaders.findIndex(h => h === 'url');
 
     if (languageIndex === -1) {
         throw new Error('Could not find "language" column in the sheet');
+    }
+
+    if (urlIndex === -1) {
+        console.warn('Warning: Could not find "url" column in the sheet');
     }
 
     // Parse data rows
@@ -69,6 +75,7 @@ BookStats.parseCSV = function(csv) {
                     startDate: startDateIndex !== -1 ? values[startDateIndex].trim() : '',
                     finishDate: finishDateIndex !== -1 ? values[finishDateIndex].trim() : '',
                     pages: pagesIndex !== -1 ? parseInt(values[pagesIndex].trim()) || 0 : 0,
+                    url: urlIndex !== -1 ? values[urlIndex].trim() : '',
                     dnf: isDNF
                 });
             }

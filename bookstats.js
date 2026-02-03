@@ -64,7 +64,7 @@ async function initializeBookStats() {
         if (!window.BookStats.colors) {
             loadBookstatsModules();
             // Give modules time to load
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await new Promise(resolve => setTimeout(resolve, 300));
         }
 
         // Inject styles and create UI

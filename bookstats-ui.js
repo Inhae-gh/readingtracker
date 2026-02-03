@@ -342,6 +342,22 @@ BookStats.injectStyles = function() {
         .calendar-book-middle {
             border-radius: 0;
         }
+        .calendar-image-container {
+            margin-top: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 40px;
+        }
+        .calendar-book-image {
+            max-width: 100%;
+            max-height: 60px;
+            width: auto;
+            height: auto;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            object-fit: cover;
+        }
         .calendar-book-korean {
             background-color: ${BookStats.colors.korean.bg};
         }
