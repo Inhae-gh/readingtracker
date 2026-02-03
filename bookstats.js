@@ -13,7 +13,8 @@ function loadBookstatsModules() {
         'bookstats-chart-pie.js',
         'bookstats-chart-timeline.js',
         'bookstats-chart-duration.js',
-        'bookstats-chart-monthly.js'
+        'bookstats-chart-monthly.js',
+        'bookstats-chart-calendar.js'
     ];
 
     // Check which modules are already loaded by checking for key functions
@@ -26,6 +27,7 @@ function loadBookstatsModules() {
     if (!window.BookStats.createTimelineChart) requiredModules.push('bookstats-chart-timeline.js');
     if (!window.BookStats.createDurationChart) requiredModules.push('bookstats-chart-duration.js');
     if (!window.BookStats.createMonthlyChart) requiredModules.push('bookstats-chart-monthly.js');
+    if (!window.BookStats.createCalendarChart) requiredModules.push('bookstats-chart-calendar.js');
 
     // Determine base URL for modules
     let baseUrl = '';
@@ -109,6 +111,7 @@ async function initializeBookStats() {
             BookStats.createTimelineChart(filteredData);
             BookStats.createDurationChart(filteredData);
             BookStats.createMonthlyChart(filteredData);
+            BookStats.createCalendarChart(filteredData);
 
             // Display total books
             const total = Object.values(languageCounts).reduce((a, b) => a + b, 0);

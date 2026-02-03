@@ -234,6 +234,122 @@ BookStats.injectStyles = function() {
             height: 400px;
             margin: 30px 0;
         }
+        .calendar-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .calendar-controls label {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        .calendar-month-select {
+            padding: 8px 12px;
+            border: 2px solid #1976d2;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: white;
+            color: #333;
+            cursor: pointer;
+            min-width: 200px;
+            transition: border-color 0.2s;
+        }
+        .calendar-month-select:hover {
+            border-color: #1565c0;
+        }
+        .calendar-month-select:focus {
+            outline: none;
+            border-color: #1565c0;
+            box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
+        }
+        .calendar-view {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-bottom: 5px;
+        }
+        .calendar-day-name {
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            color: #555;
+            font-size: 13px;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+        .calendar-cell {
+            min-height: 80px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            background-color: #fafafa;
+            position: relative;
+        }
+        .calendar-cell-empty {
+            background-color: #f5f5f5;
+        }
+        .calendar-cell-today {
+            background-color: #e3f2fd;
+            border: 2px solid #1976d2;
+        }
+        .calendar-date {
+            font-weight: bold;
+            font-size: 12px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .calendar-books {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            margin: 0 -5px;
+        }
+        .calendar-book-line {
+            height: 6px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin: 0;
+        }
+        .calendar-book-line:hover {
+            transform: scaleY(1.5);
+            z-index: 10;
+        }
+        .calendar-book-single {
+            border-radius: 10px;
+            margin: 0 5px;
+        }
+        .calendar-book-start {
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+            margin-left: 5px;
+        }
+        .calendar-book-end {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            margin-right: 5px;
+        }
+        .calendar-book-middle {
+            border-radius: 0;
+        }
+        .calendar-book-korean {
+            background-color: ${BookStats.colors.korean.bg};
+        }
+        .calendar-book-japanese {
+            background-color: ${BookStats.colors.japanese.bg};
+        }
+        .calendar-book-chinese {
+            background-color: ${BookStats.colors.chineseDark.bg};
+        }
     `;
     document.head.appendChild(style);
 };
@@ -326,6 +442,11 @@ BookStats.createAppStructure = function(years) {
                     <div class="monthly-chart-container">
                         <canvas id="bookstats-monthlyChart"></canvas>
                     </div>
+                </div>
+
+                <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
+                    <h2 style="text-align: center;">Monthly Calendar View</h2>
+                    <div id="bookstats-calendar" style="margin-top: 30px;"></div>
                 </div>
             </div>
         </div>
