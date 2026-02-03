@@ -285,22 +285,22 @@ BookStats.injectStyles = function() {
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
+            gap: 0;
+            border: 1px solid #ddd;
         }
         .calendar-cell {
             min-height: 80px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
             padding: 5px;
-            background-color: #fafafa;
+            background-color: #ffffff;
             position: relative;
         }
         .calendar-cell-empty {
-            background-color: #f5f5f5;
+            background-color: #f9f9f9;
         }
         .calendar-cell-today {
             background-color: #e3f2fd;
-            border: 2px solid #1976d2;
         }
         .calendar-date {
             font-weight: bold;
@@ -313,6 +313,7 @@ BookStats.injectStyles = function() {
             flex-direction: column;
             gap: 3px;
             margin: 0 -5px;
+            padding: 0;
         }
         .calendar-book-line {
             height: 6px;
