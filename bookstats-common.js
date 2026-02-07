@@ -5,20 +5,20 @@ window.BookStats = window.BookStats || {};
 // Color scheme for languages
 BookStats.colors = {
     korean: {
-        bg: '#AEC0CF',
-        border: '#9EB0BF'
+        bg: '#89CFF0',
+        border: '#6FB7D9'
     },
     japanese: {
-        bg: '#D9C6A7',
-        border: '#C9B697'
+        bg: '#FFBF00',
+        border: '#D9A200'
     },
     chineseLight: {
-        bg: '#D1B8C5',
-        border: '#C1A8B5'
+        bg: '#9F2B68',
+        border: '#872454'
     },
     chineseDark: {
-        bg: '#BAA0AE',
-        border: '#AA909E'
+        bg: '#F8C8DC',
+        border: '#D9AEC1'
     }
 };
 
