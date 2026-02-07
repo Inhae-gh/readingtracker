@@ -132,51 +132,49 @@ BookStats.generateMonthCalendar = function(year, month, booksWithDates) {
     const daysInMonth = lastDay.getDate();
     const startDayOfWeek = firstDay.getDay(); // 0 = Sunday
 
-    // First pass: collect all books for each day and identify which books have URLs
-    const dayBookMap = {};
-    for (let day = 1; day <= daysInMonth; day++) {
-        dayBookMap[day] = [];
-    }
+    const languageOrder = ['Korean', 'Japanese', 'Chinese', 'Other'];
+    const booksByLanguage = {};
+    languageOrder.forEach(language => {
+        booksByLanguage[language] = [];
+    });
 
-    for (let day = 1; day <= daysInMonth; day++) {
-        const cellDate = new Date(year, month, day);
-        const booksOnDay = booksWithDates.filter(book => {
-            const bookStart = BookStats.parseLocalDate(book.startDate);
-            const bookFinish = BookStats.parseLocalDate(book.finishDate);
-            return bookStart <= cellDate && bookFinish >= cellDate;
+    booksWithDates.forEach(book => {
+        const language = BookStats.normalizeLanguage(book.language || '');
+        if (!booksByLanguage[language]) {
+            booksByLanguage[language] = [];
+        }
+        booksByLanguage[language].push({
+            name: book.name,
+            url: book.url,
+            language,
+            startDate: BookStats.parseLocalDate(book.startDate),
+            finishDate: BookStats.parseLocalDate(book.finishDate),
+            startDateText: book.startDate,
+            finishDateText: book.finishDate
         });
-        dayBookMap[day] = booksOnDay;
-    }
+    });
 
-    // Second pass: assign image placement (one image per day, preferring the first book with URL)
-    const dayImageMap = {}; // day -> book with URL to display
-    const usedBooks = new Set();
+    Object.values(booksByLanguage).forEach(list => {
+        list.sort((a, b) => a.startDate - b.startDate);
+    });
 
-    for (let day = 1; day <= daysInMonth; day++) {
-        if (!dayImageMap[day]) {
-            // Find the first book on this day with a URL that hasn't been used yet
-            const book = dayBookMap[day].find(b => BookStats.extractImageUrl(b.url) && !usedBooks.has(b.name));
-            if (book) {
-                dayImageMap[day] = book;
-                usedBooks.add(book.name);
-            }
-        }
-    }
+    const getBookStartingOn = (language, date) => {
+        const list = booksByLanguage[language] || [];
+        return list.find(book => BookStats.isSameDay(book.startDate, date));
+    };
 
-    // Third pass: if an image couldn't fit on its first day, push it to the next available day
-    for (let day = 1; day <= daysInMonth; day++) {
-        const book = dayBookMap[day].find(b => BookStats.extractImageUrl(b.url) && !usedBooks.has(b.name));
-        if (book) {
-            let nextDay = day;
-            while (nextDay <= daysInMonth && dayImageMap[nextDay]) {
-                nextDay++;
+    const getActiveBook = (language, date) => {
+        const list = booksByLanguage[language] || [];
+        let active = null;
+        list.forEach(book => {
+            if (book.startDate <= date && book.finishDate >= date) {
+                if (!active || book.startDate > active.startDate) {
+                    active = book;
+                }
             }
-            if (nextDay <= daysInMonth) {
-                dayImageMap[nextDay] = book;
-                usedBooks.add(book.name);
-            }
-        }
-    }
+        });
+        return active;
+    };
 
     let html = '<div class="calendar-view">';
     
@@ -200,54 +198,44 @@ BookStats.generateMonthCalendar = function(year, month, booksWithDates) {
     for (let day = 1; day <= daysInMonth; day++) {
         const cellDate = new Date(year, month, day);
         const isToday = this.isSameDay(cellDate, new Date());
-        const booksOnDay = dayBookMap[day];
-        const imageBook = dayImageMap[day];
 
         const todayClass = isToday ? ' calendar-cell-today' : '';
         html += `<div class="calendar-cell${todayClass}">`;
         html += `<div class="calendar-date">${day}</div>`;
-        
-        if (booksOnDay.length > 0) {
-            html += '<div class="calendar-books">';
-            booksOnDay.forEach(book => {
-                const bookStart = BookStats.parseLocalDate(book.startDate);
-                const bookFinish = BookStats.parseLocalDate(book.finishDate);
-                
-                // Determine if this is the start or end of the book
-                const isStart = this.isSameDay(bookStart, cellDate);
-                const isEnd = this.isSameDay(bookFinish, cellDate);
-                
-                const lang = BookStats.normalizeLanguage(book.language);
-                const langClass = lang.toLowerCase();
-                
-                let markerClass = 'calendar-book-line';
-                if (isStart && isEnd) {
-                    // Book read in a single day
-                    markerClass += ' calendar-book-single';
-                } else if (isStart) {
-                    markerClass += ' calendar-book-start';
-                } else if (isEnd) {
-                    markerClass += ' calendar-book-end';
-                } else {
-                    // Middle of the book - full width
-                    markerClass += ' calendar-book-middle';
-                }
-                
-                const title = `${book.name}\n${book.startDate} - ${book.finishDate}`;
-                html += `<div class="${markerClass} calendar-book-${langClass}" title="${title}"></div>`;
-            });
-            html += '</div>';
-        }
 
-        // Place image if assigned to this day
-        if (imageBook) {
-            const imageUrl = BookStats.extractImageUrl(imageBook.url);
-            if (imageUrl) {
-                html += `<div class="calendar-image-container">`;
-                html += `<img src="${imageUrl}" alt="${imageBook.name}" class="calendar-book-image" title="${imageBook.name}">`;
-                html += `</div>`;
+        html += '<div class="calendar-lines">';
+        languageOrder.forEach(language => {
+            const activeBook = getActiveBook(language, cellDate);
+            if (!activeBook) {
+                html += '<div class="calendar-language-row calendar-language-empty"></div>';
+                return;
             }
-        }
+
+            const nextDay = new Date(year, month, day + 1);
+            const startsNextDay = !!getBookStartingOn(language, nextDay);
+            const isStart = BookStats.isSameDay(activeBook.startDate, cellDate);
+            const endsToday = BookStats.isSameDay(activeBook.finishDate, cellDate);
+            const endsBeforeNext = BookStats.isSameDay(activeBook.finishDate, nextDay) && startsNextDay;
+            const shouldEndToday = endsToday || endsBeforeNext;
+
+            const lineTitle = `${activeBook.name}\n${activeBook.startDateText} - ${activeBook.finishDateText}`;
+            const langClass = activeBook.language.toLowerCase();
+            const coverUrl = BookStats.extractImageUrl(activeBook.url);
+            const coverStyle = coverUrl ? ` style="background-image: url('${coverUrl}')"` : '';
+            const coverClass = coverUrl ? ' calendar-cover-has-image' : ' calendar-cover-empty';
+            const startClass = isStart ? ' calendar-line-start' : '';
+            const endClass = shouldEndToday ? ' calendar-line-end' : '';
+
+            html += `<div class="calendar-language-row">`;
+            html += `<div class="calendar-line calendar-line-${langClass}${startClass}${endClass}" title="${lineTitle}" aria-label="${activeBook.name}">`;
+            if (isStart) {
+                html += `<span class="calendar-cover${coverClass}"${coverStyle}></span>`;
+            }
+            html += `<span class="calendar-line-body"></span>`;
+            html += `</div>`;
+            html += `</div>`;
+        });
+        html += '</div>';
         
         html += '</div>';
     }

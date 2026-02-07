@@ -343,64 +343,76 @@ BookStats.injectStyles = function() {
             color: #333;
             margin-bottom: 4px;
         }
-        .calendar-books {
+        .calendar-lines {
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 4px;
             margin: 0 -5px;
-            padding: 0;
+            padding-top: 2px;
         }
-        .calendar-book-line {
-            height: 6px;
-            cursor: pointer;
-            transition: transform 0.2s;
-            margin: 0;
-        }
-        .calendar-book-line:hover {
-            transform: scaleY(1.5);
-            z-index: 10;
-        }
-        .calendar-book-single {
-            border-radius: 10px;
-            margin: 0 5px;
-        }
-        .calendar-book-start {
-            border-top-left-radius: 10px;
-            border-bottom-left-radius: 10px;
-            margin-left: 5px;
-        }
-        .calendar-book-end {
-            border-top-right-radius: 10px;
-            border-bottom-right-radius: 10px;
-            margin-right: 5px;
-        }
-        .calendar-book-middle {
-            border-radius: 0;
-        }
-        .calendar-image-container {
-            margin-top: 6px;
+        .calendar-language-row {
+            height: 12px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            min-height: 40px;
         }
-        .calendar-book-image {
-            max-width: 100%;
-            max-height: 60px;
-            width: auto;
-            height: auto;
+        .calendar-language-empty {
+            opacity: 0.2;
+        }
+        .calendar-line {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            height: 10px;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+        .calendar-line:hover {
+            transform: scaleY(1.4);
+            z-index: 2;
+        }
+        .calendar-line-body {
+            flex: 1;
+            height: 4px;
+            border-radius: 0;
+            background-color: #999;
+        }
+        .calendar-line-start .calendar-line-body {
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }
+        .calendar-line-end .calendar-line-body {
+            margin-right: 6px;
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+        .calendar-cover {
+            width: 16px;
+            height: 10px;
             border-radius: 2px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-            object-fit: cover;
+            margin-right: 4px;
+            background-size: cover;
+            background-position: center;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            transition: transform 0.15s ease;
         }
-        .calendar-book-korean {
+        .calendar-cover-empty {
+            background-color: #f0f0f0;
+        }
+        .calendar-cover:hover {
+            transform: scale(2);
+            z-index: 5;
+        }
+        .calendar-line-korean .calendar-line-body {
             background-color: ${BookStats.colors.korean.bg};
         }
-        .calendar-book-japanese {
+        .calendar-line-japanese .calendar-line-body {
             background-color: ${BookStats.colors.japanese.bg};
         }
-        .calendar-book-chinese {
+        .calendar-line-chinese .calendar-line-body {
             background-color: ${BookStats.colors.chineseDark.bg};
+        }
+        .calendar-line-other .calendar-line-body {
+            background-color: #999;
         }
     `;
     document.head.appendChild(style);
