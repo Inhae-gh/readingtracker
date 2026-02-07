@@ -365,9 +365,10 @@ BookStats.injectStyles = function() {
             height: 10px;
             cursor: pointer;
             transition: transform 0.15s ease;
+            position: relative;
         }
         .calendar-line:hover {
-            transform: scaleY(1.4);
+            transform: scaleY(1.08);
             z-index: 2;
         }
         .calendar-line-body {
@@ -375,32 +376,44 @@ BookStats.injectStyles = function() {
             height: 4px;
             border-radius: 0;
             background-color: #999;
+            z-index: 1;
         }
+        /* Offset the line a bit when a book starts on this day so the cover sits centered */
         .calendar-line-start .calendar-line-body {
+            margin-left: 20px;
             border-top-left-radius: 4px;
             border-bottom-left-radius: 4px;
         }
+        /* Stop the line a bit earlier on end dates so it doesn't touch the cell edge */
         .calendar-line-end .calendar-line-body {
-            margin-right: 6px;
+            margin-right: 20px;
             border-top-right-radius: 4px;
             border-bottom-right-radius: 4px;
         }
+        /* Cover thumbnail is centered over the start date and larger than before */
         .calendar-cover {
-            width: 16px;
-            height: 10px;
-            border-radius: 2px;
-            margin-right: 4px;
+            width: 28px;
+            height: 40px;
+            border-radius: 3px;
             background-size: cover;
             background-position: center;
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            transition: transform 0.15s ease;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.12);
         }
         .calendar-cover-empty {
             background-color: #f0f0f0;
         }
+        /* Enlarge cover on hover */
         .calendar-cover:hover {
-            transform: scale(2);
-            z-index: 5;
+            transform: translate(-50%, -50%) scale(1.9);
+            z-index: 6;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
         }
         .calendar-line-korean .calendar-line-body {
             background-color: ${BookStats.colors.korean.bg};
