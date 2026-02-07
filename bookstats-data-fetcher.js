@@ -51,6 +51,7 @@ BookStats.parseCSV = function(csv) {
     const pagesIndex = normalizedHeaders.findIndex(h => h === 'pages');
     const dnfIndex = normalizedHeaders.findIndex(h => h === 'dnf');
     const urlIndex = normalizedHeaders.findIndex(h => h === 'url');
+    const authorIndex = normalizedHeaders.findIndex(h => h === 'author' || h === 'authors');
 
     if (languageIndex === -1) {
         throw new Error('Could not find "language" column in the sheet');
@@ -75,6 +76,7 @@ BookStats.parseCSV = function(csv) {
                     startDate: startDateIndex !== -1 ? values[startDateIndex].trim() : '',
                     finishDate: finishDateIndex !== -1 ? values[finishDateIndex].trim() : '',
                     pages: pagesIndex !== -1 ? parseInt(values[pagesIndex].trim()) || 0 : 0,
+                    author: authorIndex !== -1 ? values[authorIndex].trim() : '',
                     url: urlIndex !== -1 ? values[urlIndex].trim() : '',
                     dnf: isDNF
                 });

@@ -84,6 +84,37 @@ BookStats.injectStyles = function() {
         .breakdown-item:last-child {
             border-bottom: none;
         }
+        .authors-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .authors-table th,
+        .authors-table td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .authors-table th {
+            font-size: 12px;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            color: #555;
+        }
+        .authors-table tbody tr:hover {
+            background-color: #fafafa;
+        }
+        .authors-count {
+            text-align: right;
+            font-weight: 600;
+            color: #1976d2;
+        }
+        .authors-empty {
+            text-align: center;
+            color: #777;
+            padding: 20px 0;
+        }
         .loading {
             text-align: center;
             padding: 20px;
@@ -161,6 +192,7 @@ BookStats.injectStyles = function() {
             display: flex;
             gap: 15px;
             margin-bottom: 10px;
+            overflow: visible;
         }
         .timeline-axis-label {
             min-width: 80px;
@@ -173,6 +205,9 @@ BookStats.injectStyles = function() {
             font-size: 11px;
             color: #666;
             padding: 0 5px;
+            position: relative;
+            height: 20px;
+            overflow: visible;
         }
         .timeline-tooltip {
             position: absolute;
@@ -442,6 +477,11 @@ BookStats.createAppStructure = function(years) {
                 <div class="breakdown">
                     <h2>Books Read</h2>
                     <div id="bookstats-totalBooks" style="font-size: 20px; font-weight: bold; color: #1976d2;"></div>
+                </div>
+
+                <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
+                    <h2 id="bookstats-authorsTitle" style="text-align: center;">Authors</h2>
+                    <div id="bookstats-authors" style="margin-top: 20px;"></div>
                 </div>
 
                 <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
