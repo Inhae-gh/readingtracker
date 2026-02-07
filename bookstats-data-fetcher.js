@@ -69,16 +69,19 @@ BookStats.parseCSV = function(csv) {
             if (values[languageIndex]) {
                 const dnfValue = dnfIndex !== -1 ? values[dnfIndex].trim().toLowerCase() : '';
                 const isDNF = dnfValue === 'true' || dnfValue === 'yes' || dnfValue === '1' || dnfValue === 'x';
-                
+                const finishDateValue = finishDateIndex !== -1 ? values[finishDateIndex].trim() : '';
+                const isCurrentlyReading = !finishDateValue && !isDNF;
+
                 data.push({
                     name: nameIndex !== -1 ? values[nameIndex].trim() : `Book ${i}`,
                     language: values[languageIndex].trim(),
                     startDate: startDateIndex !== -1 ? values[startDateIndex].trim() : '',
-                    finishDate: finishDateIndex !== -1 ? values[finishDateIndex].trim() : '',
+                    finishDate: finishDateValue,
                     pages: pagesIndex !== -1 ? parseInt(values[pagesIndex].trim()) || 0 : 0,
                     author: authorIndex !== -1 ? values[authorIndex].trim() : '',
                     url: urlIndex !== -1 ? values[urlIndex].trim() : '',
-                    dnf: isDNF
+                    dnf: isDNF,
+                    currentlyReading: isCurrentlyReading
                 });
             }
         }
@@ -152,6 +155,7 @@ BookStats.filterDataByYear = function(data, year) {
     }
     
     const yearNum = parseInt(year);
+    const currentYear = new Date().getFullYear();
     
     return data.filter(book => {
         // Check only finish date
@@ -159,6 +163,15 @@ BookStats.filterDataByYear = function(data, year) {
             try {
                 const bookYear = new Date(book.finishDate).getFullYear();
                 if (bookYear === yearNum) return true;
+            } catch (e) {
+                // Invalid date, skip
+            }
+        }
+
+        if (book.currentlyReading && yearNum === currentYear && book.startDate) {
+            try {
+                const startYear = new Date(book.startDate).getFullYear();
+                if (!isNaN(startYear) && startYear <= currentYear) return true;
             } catch (e) {
                 // Invalid date, skip
             }

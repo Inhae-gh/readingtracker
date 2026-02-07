@@ -104,16 +104,17 @@ async function initializeBookStats() {
         // Function to update all charts with filtered data
         const updateCharts = (selectedYear) => {
             const filteredData = BookStats.filterDataByYear(allData, selectedYear);
+            const completedData = filteredData.filter(book => !book.currentlyReading);
             
             // Process data to count books by language
-            const languageCounts = BookStats.processLanguageData(filteredData);
+            const languageCounts = BookStats.processLanguageData(completedData);
 
             // Create/update charts
             BookStats.createPieChart(languageCounts);
-            BookStats.createAuthorTable(filteredData, selectedYear);
+            BookStats.createAuthorTable(completedData, selectedYear);
             BookStats.createTimelineChart(filteredData);
-            BookStats.createDurationChart(filteredData);
-            BookStats.createMonthlyChart(filteredData);
+            BookStats.createDurationChart(completedData);
+            BookStats.createMonthlyChart(completedData);
             BookStats.createCalendarChart(filteredData);
 
             // Display total books

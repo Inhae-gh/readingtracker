@@ -7,7 +7,20 @@ BookStats.createCalendarChart = function(data) {
     if (!container) return;
 
     // Filter books with valid dates
-    const booksWithDates = data.filter(book => book.startDate && book.finishDate);
+    const today = new Date();
+    const todayText = BookStats.formatLocalDate(today);
+    const booksWithDates = data
+        .filter(book => book.startDate && (book.finishDate || book.currentlyReading))
+        .map(book => {
+            if (book.finishDate) return book;
+            if (book.currentlyReading) {
+                return {
+                    ...book,
+                    finishDate: todayText
+                };
+            }
+            return book;
+        });
 
     if (booksWithDates.length === 0) {
         container.innerHTML = '<p style="color: #999; text-align: center;">No books with dates available</p>';
@@ -84,6 +97,13 @@ BookStats.parseLocalDate = function(dateStr) {
     }
     // Fallback to standard parsing
     return new Date(dateStr);
+};
+
+BookStats.formatLocalDate = function(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 };
 
 // Helper to normalize image URLs (supports =IMAGE("...") formulas)

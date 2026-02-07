@@ -3,14 +3,23 @@
 window.BookStats = window.BookStats || {};
 
 BookStats.createTimelineChart = function(data) {
+    const today = new Date();
+
     // Normalize languages: combine Traditional and Simplified Chinese
-    const normalizedData = data.map(book => ({
-        ...book,
-        normalizedLanguage: BookStats.normalizeLanguage(book.language)
-    }));
+    const normalizedData = data
+        .filter(book => book.startDate && (book.finishDate || book.currentlyReading))
+        .map(book => {
+            const finishDate = book.finishDate ? new Date(book.finishDate) : today;
+            return {
+                ...book,
+                normalizedLanguage: BookStats.normalizeLanguage(book.language),
+                startDateObj: new Date(book.startDate),
+                finishDateObj: finishDate
+            };
+        });
 
     // Filter books with valid dates
-    const booksWithDates = normalizedData.filter(book => book.startDate && book.finishDate);
+    const booksWithDates = normalizedData.filter(book => !isNaN(book.startDateObj) && !isNaN(book.finishDateObj));
 
     if (booksWithDates.length === 0) {
         document.getElementById('bookstats-timeline').innerHTML = '<p style="color: #999; text-align: center;">No books with dates available</p>';
@@ -18,12 +27,12 @@ BookStats.createTimelineChart = function(data) {
     }
 
     // Find date range
-    let minDate = new Date(booksWithDates[0].startDate);
-    let maxDate = new Date(booksWithDates[0].finishDate);
+    let minDate = new Date(booksWithDates[0].startDateObj);
+    let maxDate = new Date(booksWithDates[0].finishDateObj);
 
     booksWithDates.forEach(book => {
-        const startDate = new Date(book.startDate);
-        const finishDate = new Date(book.finishDate);
+        const startDate = book.startDateObj;
+        const finishDate = book.finishDateObj;
         if (startDate < minDate) minDate = startDate;
         if (finishDate > maxDate) maxDate = finishDate;
     });
@@ -85,8 +94,8 @@ BookStats.createTimelineChart = function(data) {
         `;
 
         books.forEach(book => {
-            const startDate = new Date(book.startDate);
-            const finishDate = new Date(book.finishDate);
+            const startDate = book.startDateObj;
+            const finishDate = book.finishDateObj;
 
             // Calculate position and width in pixels
             const startDay = (startDate - minDate) / (1000 * 60 * 60 * 24);
