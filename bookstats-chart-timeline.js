@@ -67,8 +67,21 @@ BookStats.createTimelineChart = function(data) {
     const totalWidth = totalDays * pixelsPerDay;
     const gapPx = Math.max(4, Math.round(pixelsPerDay * 0.15));
 
+    // Build month shortcuts
+    let monthHTML = '<div class="timeline-month-shortcuts">';
+    const monthCursor = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+    const monthEnd = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1);
+    while (monthCursor <= monthEnd) {
+        const monthLabel = monthCursor.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        const monthStartDay = Math.round((monthCursor - minDate) / dayMs);
+        const monthLeftPx = Math.max(0, monthStartDay * pixelsPerDay);
+        monthHTML += `<button type="button" class="timeline-month-button" data-scroll-left="${monthLeftPx}">${monthLabel}</button>`;
+        monthCursor.setMonth(monthCursor.getMonth() + 1);
+    }
+    monthHTML += '</div>';
+
     // Create timeline axis
-    let timelineHTML = '<div class="timeline-wrapper" style="overflow-x: auto;"><div style="width: ' + totalWidth + 'px;">';
+    let timelineHTML = `${monthHTML}<div id="bookstats-timeline-wrapper" class="timeline-wrapper" style="overflow-x: auto;"><div style="width: ${totalWidth}px;">`;
     
     // Axis with date markers
     timelineHTML += '<div class="timeline-axis" style="width: ' + totalWidth + 'px;">';
@@ -137,5 +150,15 @@ BookStats.createTimelineChart = function(data) {
     });
 
     timelineHTML += '</div></div></div>';
-    document.getElementById('bookstats-timeline').innerHTML = timelineHTML;
+    const timelineRoot = document.getElementById('bookstats-timeline');
+    timelineRoot.innerHTML = timelineHTML;
+    const timelineWrapper = document.getElementById('bookstats-timeline-wrapper');
+    if (timelineWrapper) {
+        timelineRoot.querySelectorAll('.timeline-month-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const scrollLeft = parseInt(button.dataset.scrollLeft || '0', 10);
+                timelineWrapper.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+            });
+        });
+    }
 };

@@ -130,6 +130,28 @@ BookStats.injectStyles = function() {
         .timeline-wrapper {
             overflow-x: auto;
         }
+        .timeline-month-shortcuts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        .timeline-month-button {
+            border: 1px solid #c9c2b8;
+            background-color: #fdfbf7;
+            color: #3b3b3b;
+            padding: 6px 10px;
+            font-size: 12px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+        }
+        .timeline-month-button:hover {
+            background-color: #f5efe6;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
         .timeline-container {
             display: flex;
             flex-direction: column;
