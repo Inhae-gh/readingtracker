@@ -204,8 +204,8 @@ BookStats.injectStyles = function() {
         }
         .timeline-cover {
             position: absolute;
-            top: -94px;
-            left: 0;
+            top: 50%;
+            left: 6px;
             width: 64px;
             height: 92px;
             border-radius: 4px;
@@ -214,6 +214,7 @@ BookStats.injectStyles = function() {
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
             display: none;
             z-index: 2;
+            transform: translateY(-50%);
         }
         .timeline-book:hover .timeline-cover {
             display: block;
