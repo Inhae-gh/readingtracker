@@ -166,14 +166,35 @@ BookStats.injectStyles = function() {
             border-radius: 3px;
             font-size: 11px;
             color: white;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            overflow: visible;
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s;
             display: flex;
             align-items: center;
+            gap: 6px;
+        }
+        .timeline-book-label {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .timeline-cover {
+            position: absolute;
+            top: -94px;
+            left: 0;
+            width: 64px;
+            height: 92px;
+            border-radius: 4px;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+            display: none;
+            z-index: 2;
+        }
+        .timeline-book:hover .timeline-cover {
+            display: block;
         }
         .timeline-book:hover {
             transform: scale(1.02);

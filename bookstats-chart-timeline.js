@@ -3,17 +3,21 @@
 window.BookStats = window.BookStats || {};
 
 BookStats.createTimelineChart = function(data) {
+    const dayMs = 1000 * 60 * 60 * 24;
     const today = new Date();
+    const parseDate = BookStats.parseLocalDate || (dateStr => new Date(dateStr));
+    const formatDate = BookStats.formatLocalDate || (dateObj => dateObj.toISOString().split('T')[0]);
+    const todayText = formatDate(today);
 
     // Normalize languages: combine Traditional and Simplified Chinese
     const normalizedData = data
         .filter(book => book.startDate && (book.finishDate || book.currentlyReading))
         .map(book => {
-            const finishDate = book.finishDate ? new Date(book.finishDate) : today;
+            const finishDate = book.finishDate ? parseDate(book.finishDate) : parseDate(todayText);
             return {
                 ...book,
                 normalizedLanguage: BookStats.normalizeLanguage(book.language),
-                startDateObj: new Date(book.startDate),
+                startDateObj: parseDate(book.startDate),
                 finishDateObj: finishDate
             };
         });
@@ -52,15 +56,16 @@ BookStats.createTimelineChart = function(data) {
 
     // Sort books by start date within each language
     Object.keys(groupedByLanguage).forEach(lang => {
-        groupedByLanguage[lang].sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+        groupedByLanguage[lang].sort((a, b) => a.startDateObj - b.startDateObj);
     });
 
     // Calculate timeline dimensions
-    const totalDays = (maxDate - minDate) / (1000 * 60 * 60 * 24);
+    const totalDays = Math.max(1, Math.round((maxDate - minDate) / dayMs) + 1);
     
     // Allocate pixels per day - this creates more horizontal space
-    const pixelsPerDay = 20;
+    const pixelsPerDay = 40;
     const totalWidth = totalDays * pixelsPerDay;
+    const gapPx = Math.max(4, Math.round(pixelsPerDay * 0.15));
 
     // Create timeline axis
     let timelineHTML = '<div class="timeline-wrapper" style="overflow-x: auto;"><div style="width: ' + totalWidth + 'px;">';
@@ -71,9 +76,9 @@ BookStats.createTimelineChart = function(data) {
     timelineHTML += '<div class="timeline-axis-track" style="width: ' + totalWidth + 'px;">';
     
     // Generate date markers every ~2 weeks
-    const markerInterval = Math.ceil(totalDays / 8); // Aim for ~8-10 markers
-    for (let i = 0; i <= totalDays; i += markerInterval) {
-        const markerDate = new Date(minDate.getTime() + i * 24 * 60 * 60 * 1000);
+    const markerInterval = Math.max(1, Math.ceil(totalDays / 8)); // Aim for ~8-10 markers
+    for (let i = 0; i <= totalDays - 1; i += markerInterval) {
+        const markerDate = new Date(minDate.getTime() + i * dayMs);
         const dateStr = markerDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         const leftPos = i * pixelsPerDay;
         timelineHTML += `<span style="position: absolute; left: ${leftPos}px;">${dateStr}</span>`;
@@ -98,23 +103,32 @@ BookStats.createTimelineChart = function(data) {
             const finishDate = book.finishDateObj;
 
             // Calculate position and width in pixels
-            const startDay = (startDate - minDate) / (1000 * 60 * 60 * 24);
-            const finishDay = (finishDate - minDate) / (1000 * 60 * 60 * 24);
-            
-            const duration = finishDay - startDay - 1;
+            const startDay = Math.round((startDate - minDate) / dayMs);
+            const finishDay = Math.round((finishDate - minDate) / dayMs);
+
+            const durationDays = Math.max(1, finishDay - startDay + 1);
 
             const leftPx = startDay * pixelsPerDay;
-            const widthPx = Math.max(20, duration * pixelsPerDay); // Minimum width for visibility
+            const widthPx = Math.max(24, durationDays * pixelsPerDay - gapPx);
 
             const cssClass = `timeline-book timeline-book-${lang.toLowerCase()}`;
             const formattedStart = startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' });
             const formattedEnd = finishDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' });
+            const displayTitle = (widthPx < 70)
+                ? `${book.name.slice(0, 8)}${book.name.length > 8 ? '...' : ''}`
+                : (widthPx < 110)
+                    ? `${book.name.slice(0, 16)}${book.name.length > 16 ? '...' : ''}`
+                    : book.name;
+            const coverUrl = BookStats.extractImageUrl ? BookStats.extractImageUrl(book.url) : '';
+            const coverStyle = coverUrl ? ` style="background-image: url('${coverUrl}')"` : '';
+            const coverSpan = coverUrl ? `<span class="timeline-cover"${coverStyle}></span>` : '';
 
             timelineHTML += `
                 <div class="${cssClass}" 
                      style="left: ${leftPx}px; width: ${widthPx}px;"
                      title="${book.name}&#10;${formattedStart} - ${formattedEnd}">
-                    ${book.name}
+                    ${coverSpan}
+                    <span class="timeline-book-label">${displayTitle}</span>
                 </div>
             `;
         });
