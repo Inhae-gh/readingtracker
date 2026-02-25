@@ -471,6 +471,132 @@ BookStats.injectStyles = function() {
         .calendar-line-other .calendar-line-body {
             background-color: #999;
         }
+        .covers-month-filter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+        }
+        .covers-month-filter label {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        .covers-month-select {
+            padding: 8px 12px;
+            border: 2px solid #1976d2;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: white;
+            color: #333;
+            cursor: pointer;
+            min-width: 150px;
+            transition: border-color 0.2s;
+        }
+        .covers-month-select:hover {
+            border-color: #1565c0;
+        }
+        .covers-month-select:focus {
+            outline: none;
+            border-color: #1565c0;
+            box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
+        }
+        .covers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+        }
+        @media (max-width: 768px) {
+            .covers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 20px;
+            }
+        }
+        @media (max-width: 480px) {
+            .covers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 15px;
+            }
+        }
+        .cover-item {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .cover-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .cover-image {
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            background-size: cover;
+            background-position: center;
+            background-color: #f0f0f0;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .cover-image-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .cover-details {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+        .cover-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #2c3e50;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: 33px;
+        }
+        .cover-author {
+            font-size: 11px;
+            color: #666;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .cover-date {
+            font-size: 11px;
+            color: #888;
+            margin-top: auto;
+        }
+        .cover-language {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+            margin-top: 4px;
+            align-self: flex-start;
+        }
     `;
     document.head.appendChild(style);
 };
@@ -546,6 +672,11 @@ BookStats.createAppStructure = function(years) {
                 <div class="breakdown">
                     <h2>Books Read</h2>
                     <div id="bookstats-totalBooks" style="font-size: 20px; font-weight: bold; color: #1976d2;"></div>
+                </div>
+
+                <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
+                    <h2 style="text-align: center;">Book Covers</h2>
+                    <div id="bookstats-covers" style="margin-top: 30px;"></div>
                 </div>
 
                 <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">

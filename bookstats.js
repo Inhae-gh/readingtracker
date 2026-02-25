@@ -11,6 +11,7 @@ function loadBookstatsModules() {
         'bookstats-data-fetcher.js',
         'bookstats-ui.js',
         'bookstats-chart-pie.js',
+        'bookstats-chart-covers.js',
         'bookstats-chart-authors.js',
         'bookstats-chart-timeline.js',
         'bookstats-chart-duration.js',
@@ -25,6 +26,7 @@ function loadBookstatsModules() {
     if (!window.BookStats.fetchSheetData) requiredModules.push('bookstats-data-fetcher.js');
     if (!window.BookStats.injectStyles) requiredModules.push('bookstats-ui.js');
     if (!window.BookStats.createPieChart) requiredModules.push('bookstats-chart-pie.js');
+    if (!window.BookStats.createCoversGrid) requiredModules.push('bookstats-chart-covers.js');
     if (!window.BookStats.createAuthorTable) requiredModules.push('bookstats-chart-authors.js');
     if (!window.BookStats.createTimelineChart) requiredModules.push('bookstats-chart-timeline.js');
     if (!window.BookStats.createDurationChart) requiredModules.push('bookstats-chart-duration.js');
@@ -120,6 +122,7 @@ async function initializeBookStats() {
 
             // Create/update charts
             BookStats.createPieChart(languageCounts);
+            BookStats.createCoversGrid(completedData, selectedYear);
             BookStats.createAuthorTable(completedData, selectedYear);
             BookStats.createTimelineChart(filteredData);
             BookStats.createDurationChart(completedData);
