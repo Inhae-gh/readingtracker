@@ -127,6 +127,49 @@ BookStats.injectStyles = function() {
             border-radius: 5px;
             margin: 20px 0;
         }
+        .bookstats-tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid #ddd;
+            margin: 30px 0 0 0;
+            flex-wrap: wrap;
+        }
+        .bookstats-tab {
+            padding: 12px 24px;
+            background-color: #f5f5f5;
+            border: none;
+            border-top: 2px solid transparent;
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.2s ease;
+            position: relative;
+            bottom: -2px;
+        }
+        .bookstats-tab:first-child {
+            border-left: none;
+        }
+        .bookstats-tab:hover {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .bookstats-tab.active {
+            background-color: #ffffff;
+            color: #1976d2;
+            border-bottom: 2px solid #ffffff;
+            border-top-color: #1976d2;
+            font-weight: 600;
+        }
+        .bookstats-tab-content {
+            display: none;
+            padding-top: 30px;
+        }
+        .bookstats-tab-content.active {
+            display: block;
+        }
         .timeline-wrapper {
             overflow-x: auto;
         }
@@ -639,6 +682,28 @@ BookStats.createYearFilterDropdown = function(years) {
     document.head.appendChild(yearSelectStyle);
 };
 
+BookStats.initializeTabs = function() {
+    const tabs = document.querySelectorAll('.bookstats-tab');
+    const tabContents = document.querySelectorAll('.bookstats-tab-content');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabName = tab.getAttribute('data-tab');
+            
+            // Remove active class from all tabs and contents
+            tabs.forEach(t => t.classList.remove('active'));
+            tabContents.forEach(tc => tc.classList.remove('active'));
+            
+            // Add active class to clicked tab and corresponding content
+            tab.classList.add('active');
+            const activeContent = document.querySelector(`[data-tab-content="${tabName}"]`);
+            if (activeContent) {
+                activeContent.classList.add('active');
+            }
+        });
+    });
+};
+
 BookStats.createAppStructure = function(years) {
     const root = document.getElementById('bookstats-root');
     
@@ -665,45 +730,57 @@ BookStats.createAppStructure = function(years) {
             <div id="bookstats-error" class="error" style="display: none;"></div>
             
             <div id="bookstats-content" style="display: none;">
-                <div class="chart-container">
-                    <canvas id="bookstats-languageChart"></canvas>
-                </div>
-                
-                <div class="breakdown">
-                    <h2>Books Read</h2>
-                    <div id="bookstats-totalBooks" style="font-size: 20px; font-weight: bold; color: #1976d2;"></div>
-                </div>
-
-                <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
-                    <h2 style="text-align: center;">Book Covers</h2>
-                    <div id="bookstats-covers" style="margin-top: 30px;"></div>
+                <div class="bookstats-tabs">
+                    <button class="bookstats-tab active" data-tab="pie">Pie Chart</button>
+                    <button class="bookstats-tab" data-tab="covers">Covers</button>
+                    <button class="bookstats-tab" data-tab="authors">Authors</button>
+                    <button class="bookstats-tab" data-tab="timeline">Timeline</button>
+                    <button class="bookstats-tab" data-tab="duration">Duration</button>
+                    <button class="bookstats-tab" data-tab="monthly">Monthly</button>
+                    <button class="bookstats-tab" data-tab="calendar">Calendar</button>
                 </div>
 
-                <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
-                    <h2 id="bookstats-authorsTitle" style="text-align: center;">Authors</h2>
-                    <div id="bookstats-authors" style="margin-top: 20px;"></div>
+                <div class="bookstats-tab-content active" data-tab-content="pie">
+                    <div class="chart-container">
+                        <canvas id="bookstats-languageChart"></canvas>
+                    </div>
+                    
+                    <div class="breakdown">
+                        <h2>Books Read</h2>
+                        <div id="bookstats-totalBooks" style="font-size: 20px; font-weight: bold; color: #1976d2;"></div>
+                    </div>
                 </div>
 
-                <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
-                    <h2 style="text-align: center;">Timeline</h2>
-                    <div id="bookstats-timeline" style="margin-top: 30px;"></div>
+                <div class="bookstats-tab-content" data-tab-content="covers">
+                    <h2 style="text-align: center; margin-bottom: 30px;">Book Covers</h2>
+                    <div id="bookstats-covers"></div>
                 </div>
 
-                <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
-                    <h2 style="text-align: center;">Book Duration</h2>
-                    <div id="bookstats-durationChart" style="margin-top: 30px;"></div>
+                <div class="bookstats-tab-content" data-tab-content="authors">
+                    <h2 id="bookstats-authorsTitle" style="text-align: center; margin-bottom: 20px;">Authors</h2>
+                    <div id="bookstats-authors"></div>
                 </div>
 
-                <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
-                    <h2 style="text-align: center;">Books and Pages per Month</h2>
+                <div class="bookstats-tab-content" data-tab-content="timeline">
+                    <h2 style="text-align: center; margin-bottom: 30px;">Timeline</h2>
+                    <div id="bookstats-timeline"></div>
+                </div>
+
+                <div class="bookstats-tab-content" data-tab-content="duration">
+                    <h2 style="text-align: center; margin-bottom: 30px;">Book Duration</h2>
+                    <div id="bookstats-durationChart"></div>
+                </div>
+
+                <div class="bookstats-tab-content" data-tab-content="monthly">
+                    <h2 style="text-align: center; margin-bottom: 30px;">Books and Pages per Month</h2>
                     <div class="monthly-chart-container">
                         <canvas id="bookstats-monthlyChart"></canvas>
                     </div>
                 </div>
 
-                <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 30px;">
-                    <h2 style="text-align: center;">Monthly Calendar View</h2>
-                    <div id="bookstats-calendar" style="margin-top: 30px;"></div>
+                <div class="bookstats-tab-content" data-tab-content="calendar">
+                    <h2 style="text-align: center; margin-bottom: 30px;">Monthly Calendar View</h2>
+                    <div id="bookstats-calendar"></div>
                 </div>
             </div>
         </div>

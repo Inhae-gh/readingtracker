@@ -138,6 +138,9 @@ async function initializeBookStats() {
         document.getElementById('bookstats-loading').style.display = 'none';
         document.getElementById('bookstats-content').style.display = 'block';
         
+        // Initialize tabs
+        BookStats.initializeTabs();
+        
         // Initial chart creation with most recent year selected
         const mostRecentYear = years.length > 0 ? years[0] : 'all';
         updateCharts(mostRecentYear);
