@@ -4,7 +4,7 @@
 
 window.BookStats = window.BookStats || {};
 
-// Dynamic module loader
+// Dynamic module loader - returns a Promise that resolves when all modules are loaded
 function loadBookstatsModules() {
     const modules = [
         'bookstats-common.js',
@@ -31,6 +31,11 @@ function loadBookstatsModules() {
     if (!window.BookStats.createMonthlyChart) requiredModules.push('bookstats-chart-monthly.js');
     if (!window.BookStats.createCalendarChart) requiredModules.push('bookstats-chart-calendar.js');
 
+    // If all modules are already loaded, resolve immediately
+    if (requiredModules.length === 0) {
+        return Promise.resolve();
+    }
+
     // Determine base URL for modules
     let baseUrl = '';
     
@@ -50,13 +55,19 @@ function loadBookstatsModules() {
         // else: baseUrl stays empty, which will load relative to current page URL
     }
 
-    // Load missing modules
-    requiredModules.forEach(module => {
-        const script = document.createElement('script');
-        script.src = baseUrl + module;
-        script.async = false;
-        document.head.appendChild(script);
+    // Load missing modules and return a Promise that resolves when all are loaded
+    const loadPromises = requiredModules.map(module => {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = baseUrl + module;
+            script.async = false;
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error(`Failed to load module: ${module}`));
+            document.head.appendChild(script);
+        });
     });
+
+    return Promise.all(loadPromises);
 }
 
 // Initialize application
@@ -64,9 +75,7 @@ async function initializeBookStats() {
     try {
         // Ensure all modules are loaded
         if (!window.BookStats.colors) {
-            loadBookstatsModules();
-            // Give modules time to load
-            await new Promise(resolve => setTimeout(resolve, 300));
+            await loadBookstatsModules();
         }
 
         // Inject styles and create UI
@@ -144,6 +153,18 @@ async function initializeBookStats() {
     }
 }
 
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', initializeBookStats);
+// Initialize when page loads - handles both cases where DOM is already ready or not
+// This is more robust for WordPress and cached pages
+function startBookStats() {
+    if (document.readyState === 'loading') {
+        // DOM is still loading, wait for it
+        document.addEventListener('DOMContentLoaded', initializeBookStats);
+    } else {
+        // DOM is already ready (e.g., script loaded after DOMContentLoaded)
+        initializeBookStats();
+    }
+}
+
+// Start immediately
+startBookStats();
 
