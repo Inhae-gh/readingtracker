@@ -6,19 +6,19 @@ window.BookStats = window.BookStats || {};
 BookStats.colors = {
     korean: {
         bg: '#5e8591',
-        border: '#463A50'
+        border: '#5e8591'
     },
     japanese: {
         bg: '#bdad91',
-        border: '#CCAE8F'
+        border: '#bdad91'
     },
     chineseLight: {
         bg: '#bd91a3',
-        border: '#7F6969'
+        border: '#bd91a3'
     },
     chineseDark: {
         bg: '#915e74',
-        border: '#A08888'
+        border: '#915e74'
     }
 };
 
