@@ -730,12 +730,12 @@ BookStats.createAppStructure = function(years) {
             
             <div id="bookstats-content" style="display: none;">
                 <div class="bookstats-tabs">
-                    <button class="bookstats-tab active" data-tab="pie">Pie Chart</button>
-                    <button class="bookstats-tab" data-tab="covers">Covers</button>
+                    <button class="bookstats-tab active" data-tab="pie">Languages</button>
+                    <button class="bookstats-tab" data-tab="covers">Books</button>
                     <button class="bookstats-tab" data-tab="authors">Authors</button>
                     <button class="bookstats-tab" data-tab="timeline">Timeline</button>
                     <button class="bookstats-tab" data-tab="duration">Duration</button>
-                    <button class="bookstats-tab" data-tab="monthly">Monthly</button>
+                    <button class="bookstats-tab" data-tab="monthly">Pages</button>
                     <button class="bookstats-tab" data-tab="calendar">Calendar</button>
                 </div>
 
@@ -751,12 +751,12 @@ BookStats.createAppStructure = function(years) {
                 </div>
 
                 <div class="bookstats-tab-content" data-tab-content="covers">
-                    <h2 style="text-align: center; margin-bottom: 30px;">Book Covers</h2>
+                    <h2 style="text-align: center; margin-bottom: 30px;">Finished Books</h2>
                     <div id="bookstats-covers"></div>
                 </div>
 
                 <div class="bookstats-tab-content" data-tab-content="authors">
-                    <h2 id="bookstats-authorsTitle" style="text-align: center; margin-bottom: 20px;">Authors</h2>
+                    <h2 id="bookstats-authorsTitle" style="text-align: center; margin-bottom: 20px;">Number of Books per Author</h2>
                     <div id="bookstats-authors"></div>
                 </div>
 
@@ -766,7 +766,7 @@ BookStats.createAppStructure = function(years) {
                 </div>
 
                 <div class="bookstats-tab-content" data-tab-content="duration">
-                    <h2 style="text-align: center; margin-bottom: 30px;">Book Duration</h2>
+                    <h2 style="text-align: center; margin-bottom: 30px;">Book Duration (days)</h2>
                     <div id="bookstats-durationChart"></div>
                 </div>
 
@@ -778,7 +778,7 @@ BookStats.createAppStructure = function(years) {
                 </div>
 
                 <div class="bookstats-tab-content" data-tab-content="calendar">
-                    <h2 style="text-align: center; margin-bottom: 30px;">Monthly Calendar View</h2>
+                    <h2 style="text-align: center; margin-bottom: 30px;">Monthly Calendar</h2>
                     <div id="bookstats-calendar"></div>
                 </div>
             </div>

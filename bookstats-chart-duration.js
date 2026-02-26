@@ -40,7 +40,7 @@ BookStats.createDurationChart = function(data) {
                 <div class="duration-label" title="${book.name}">${book.name}</div>
                 <div class="duration-bar-container">
                     <div class="${barClass}" style="width: ${widthPercent}%;" title="${book.language} - ${displayDays}">
-                        ${displayDays}
+                        ${book.days}
                     </div>
                 </div>
             </div>
