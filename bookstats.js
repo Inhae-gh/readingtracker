@@ -121,7 +121,7 @@ async function initializeBookStats() {
             const languageCounts = BookStats.processLanguageData(completedData);
 
             // Create/update charts
-            BookStats.createPieChart(languageCounts);
+            BookStats.createPieChart(completedData, selectedYear);
             BookStats.createCoversGrid(completedData, selectedYear);
             BookStats.createAuthorTable(completedData, selectedYear);
             BookStats.createTimelineChart(filteredData);
