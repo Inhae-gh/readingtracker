@@ -108,7 +108,7 @@ BookStats.injectStyles = function() {
         .authors-count {
             text-align: right;
             font-weight: 600;
-            color: #1976d2;
+            color: #9e6d6d;
         }
         .authors-empty {
             text-align: center;
@@ -158,9 +158,9 @@ BookStats.injectStyles = function() {
         }
         .bookstats-tab.active {
             background-color: #ffffff;
-            color: #1976d2;
+            color: #9e6d6d;
             border-bottom: 2px solid #ffffff;
-            border-top-color: #1976d2;
+            border-top-color: #9e6d6d;
             font-weight: 600;
         }
         .bookstats-tab-content {
@@ -370,7 +370,7 @@ BookStats.injectStyles = function() {
         }
         .calendar-month-select {
             padding: 8px 12px;
-            border: 2px solid #1976d2;
+            border: 2px solid #9e6d6d;
             border-radius: 5px;
             font-size: 14px;
             background-color: white;
@@ -531,7 +531,7 @@ BookStats.injectStyles = function() {
         }
         .covers-month-select {
             padding: 8px 12px;
-            border: 2px solid #1976d2;
+            border: 2px solid #9e6d6d;
             border-radius: 5px;
             font-size: 14px;
             background-color: white;
@@ -661,7 +661,7 @@ BookStats.createYearFilterDropdown = function(years) {
         }
         .year-filter-select {
             padding: 8px 12px;
-            border: 2px solid #1976d2;
+            border: 2px solid #9e6d6d;
             border-radius: 5px;
             font-size: 14px;
             background-color: white;
@@ -723,7 +723,6 @@ BookStats.createAppStructure = function(years) {
     
     root.innerHTML = `
         <div class="bookstats-wrapper">
-            <h2 style="text-align: center; margin-bottom: 20px;" >Books by Language</h2>
             ${yearFilterHTML}
             
             <div id="bookstats-loading" class="loading">Loading data from Google Sheet...</div>
@@ -747,7 +746,7 @@ BookStats.createAppStructure = function(years) {
                     
                     <div class="breakdown">
                         <h2>Books Read</h2>
-                        <div id="bookstats-totalBooks" style="font-size: 20px; font-weight: bold; color: #1976d2;"></div>
+                        <div id="bookstats-totalBooks" style="font-size: 20px; font-weight: bold; color: #9e6d6d;"></div>
                     </div>
                 </div>
 
