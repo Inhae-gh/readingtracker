@@ -51,6 +51,7 @@ BookStats.parseCSV = function(csv) {
     const pagesIndex = normalizedHeaders.findIndex(h => h === 'pages');
     const dnfIndex = normalizedHeaders.findIndex(h => h === 'dnf');
     const urlIndex = normalizedHeaders.findIndex(h => h === 'url');
+    const linkIndex = normalizedHeaders.findIndex(h => h === 'link');
     const authorIndex = normalizedHeaders.findIndex(h => h === 'author' || h === 'authors');
 
     if (languageIndex === -1) {
@@ -80,6 +81,7 @@ BookStats.parseCSV = function(csv) {
                     pages: pagesIndex !== -1 ? parseInt(values[pagesIndex].trim()) || 0 : 0,
                     author: authorIndex !== -1 ? values[authorIndex].trim() : '',
                     url: urlIndex !== -1 ? values[urlIndex].trim() : '',
+                    link: linkIndex !== -1 ? values[linkIndex].trim() : '',
                     dnf: isDNF,
                     currentlyReading: isCurrentlyReading
                 });

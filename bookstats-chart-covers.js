@@ -117,10 +117,19 @@ BookStats.generateCoversGrid = function(books) {
 
         html += '<div class="cover-item">';
         
+        // Wrap cover in link if available
+        if (book.link) {
+            html += `<a href="${BookStats.escapeHtml(book.link)}" target="_blank" rel="noopener noreferrer" class="cover-link">`;
+        }
+        
         if (coverUrl) {
             html += `<div class="cover-image" style="background-image: url('${coverUrl}')"></div>`;
         } else {
             html += `<div class="cover-image cover-image-placeholder" style="background-color: ${color}"></div>`;
+        }
+        
+        if (book.link) {
+            html += '</a>';
         }
         
         html += '<div class="cover-details">';
