@@ -5,19 +5,19 @@ window.BookStats = window.BookStats || {};
 // Color scheme for languages
 BookStats.colors = {
     korean: {
-        bg: '#574964',
+        bg: '#5e8591',
         border: '#463A50'
     },
     japanese: {
-        bg: '#FFDAB3',
+        bg: '#bdad91',
         border: '#CCAE8F'
     },
     chineseLight: {
-        bg: '#9F8383',
+        bg: '#bd91a3',
         border: '#7F6969'
     },
     chineseDark: {
-        bg: '#C8AAAA',
+        bg: '#915e74',
         border: '#A08888'
     }
 };
