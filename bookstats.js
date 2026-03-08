@@ -131,7 +131,7 @@ async function initializeBookStats() {
 
             // Display total books
             const total = Object.values(languageCounts).reduce((a, b) => a + b, 0);
-            document.getElementById('bookstats-totalBooks').textContent = total + ' books';
+            document.getElementById('bookstats-totalBooks').textContent = total;
         };
         
         // Show content and hide loading

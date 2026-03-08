@@ -4,6 +4,46 @@ window.BookStats = window.BookStats || {};
 
 let pieChartInstance = null;
 
+const donutSliceLabelsPlugin = {
+    id: 'donutSliceLabels',
+    afterDatasetsDraw(chart) {
+        const dataset = chart.data.datasets[0];
+        if (!dataset) return;
+
+        const values = dataset.data || [];
+        const total = values.reduce((sum, value) => sum + value, 0);
+        if (!total) return;
+
+        const ctx = chart.ctx;
+        const meta = chart.getDatasetMeta(0);
+        const baseFontSize = window.innerWidth < 480 ? 13 : 15;
+
+        meta.data.forEach((arc, index) => {
+            const value = values[index] || 0;
+            if (!value) return;
+
+            const angle = arc.endAngle - arc.startAngle;
+            // Skip tiny slices where labels would overlap heavily.
+            if (angle < 0.35) return;
+
+            const midAngle = (arc.startAngle + arc.endAngle) / 2;
+            const labelRadius = arc.innerRadius + (arc.outerRadius - arc.innerRadius) * 0.62;
+            const x = arc.x + Math.cos(midAngle) * labelRadius;
+            const y = arc.y + Math.sin(midAngle) * labelRadius;
+
+            ctx.save();
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = '#ffffff';
+
+            ctx.font = `700 ${baseFontSize}px Segoe UI, Tahoma, sans-serif`;
+            const countText = `${value}`;
+            ctx.fillText(countText, x, y);
+            ctx.restore();
+        });
+    }
+};
+
 BookStats.createPieChart = function(data, selectedYear) {
     const pieTab = document.querySelector('[data-tab-content="pie"]');
     if (!pieTab) return;
@@ -72,7 +112,7 @@ BookStats.createPieChart = function(data, selectedYear) {
     const total = Object.values(languageCounts).reduce((a, b) => a + b, 0);
     const totalElement = document.getElementById('bookstats-totalBooks');
     if (totalElement) {
-        totalElement.textContent = total + ' books';
+        totalElement.textContent = total;
     }
 
     const ctx = document.getElementById('bookstats-languageChart').getContext('2d');
@@ -98,20 +138,21 @@ BookStats.createPieChart = function(data, selectedYear) {
     }
 
     pieChartInstance = new Chart(ctx, {
-        type: 'pie',
+        type: 'doughnut',
+        plugins: [donutSliceLabelsPlugin],
         data: {
             labels: labels,
             datasets: [{
                 data: chartData,
                 backgroundColor: colors.bg,
-                borderColor: colors.border,
-                borderWidth: 2,
+                borderWidth: 0,
                 hoverOffset: 10
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: true,
+            cutout: '48%',
             plugins: {
                 legend: {
                     position: 'bottom',

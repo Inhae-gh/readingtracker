@@ -45,10 +45,38 @@ BookStats.injectStyles = function() {
             aspect-ratio: 1;
             margin: 30px auto;
         }
+        .chart-center-label {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            text-align: center;
+            color: #9e6d6d;
+            line-height: 1.1;
+        }
+        .chart-center-label-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #8a8478;
+        }
+        .chart-center-label-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #9e6d6d;
+        }
         @media (max-width: 768px) {
             .chart-container {
                 max-width: 100%;
                 margin: 20px auto;
+            }
+            .chart-center-label-value {
+                font-size: 20px;
             }
         }
         @media (max-width: 480px) {
@@ -58,6 +86,9 @@ BookStats.injectStyles = function() {
             .chart-container {
                 max-width: 100%;
                 margin: 15px auto;
+            }
+            .chart-center-label-value {
+                font-size: 18px;
             }
         }
         .breakdown {
@@ -742,11 +773,10 @@ BookStats.createAppStructure = function(years) {
                 <div class="bookstats-tab-content active" data-tab-content="pie">
                     <div class="chart-container">
                         <canvas id="bookstats-languageChart"></canvas>
-                    </div>
-                    
-                    <div class="breakdown">
-                        <h2>Books Read</h2>
-                        <div id="bookstats-totalBooks" style="font-size: 20px; font-weight: bold; color: #9e6d6d;"></div>
+                        <div class="chart-center-label" aria-live="polite">
+                            <div class="chart-center-label-title">Books Read</div>
+                            <div id="bookstats-totalBooks" class="chart-center-label-value"></div>
+                        </div>
                     </div>
                 </div>
 
