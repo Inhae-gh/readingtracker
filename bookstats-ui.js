@@ -338,6 +338,116 @@ BookStats.injectStyles = function() {
             white-space: nowrap;
             pointer-events: none;
         }
+        .progress-chart {
+            max-width: 960px;
+            margin: 0 auto;
+            border: 1px solid #e3ddd3;
+            border-radius: 10px;
+            background: linear-gradient(180deg, #fcfbf8 0%, #f7f3ec 100%);
+            padding: 16px;
+        }
+        .progress-chart-scroll {
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+        .progress-grid {
+            min-width: 680px;
+        }
+        .progress-axis {
+            position: relative;
+            height: 34px;
+            margin-left: 130px;
+            border-bottom: 1px solid #d9d1c4;
+        }
+        .progress-axis-label {
+            position: absolute;
+            bottom: 6px;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: #756d63;
+            white-space: nowrap;
+        }
+        .progress-row {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 10px;
+            align-items: start;
+            margin-top: 12px;
+        }
+        .progress-language-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2f3d4a;
+            padding-top: 12px;
+        }
+        .progress-lane {
+            position: relative;
+            min-height: 46px;
+            border-radius: 8px;
+            background-color: #f5f1ea;
+            border: 1px solid #e4ddd2;
+            overflow: hidden;
+        }
+        .progress-lane-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 1px;
+            background: repeating-linear-gradient(to right, #dad2c7, #dad2c7 4px, transparent 4px, transparent 10px);
+            transform: translateY(-50%);
+        }
+        .progress-book {
+            position: absolute;
+            top: 8px;
+            height: 30px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 10px;
+            color: #fff;
+            font-size: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16);
+        }
+        .progress-book-korean {
+            background-color: ${BookStats.colors.korean.bg};
+        }
+        .progress-book-japanese {
+            background-color: ${BookStats.colors.japanese.bg};
+        }
+        .progress-book-chinese-traditional {
+            background-color: ${BookStats.colors.chineseLight.bg};
+        }
+        .progress-book-chinese-simplified {
+            background-color: ${BookStats.colors.chineseDark.bg};
+        }
+        .progress-book-current {
+            outline: 2px dashed rgba(255, 255, 255, 0.75);
+            outline-offset: -3px;
+        }
+        .progress-empty {
+            text-align: center;
+            color: #857c72;
+            padding: 20px 0;
+            font-size: 14px;
+        }
+        @media (max-width: 640px) {
+            .progress-row {
+                grid-template-columns: 100px 1fr;
+            }
+            .progress-language-label {
+                font-size: 12px;
+                padding-top: 14px;
+            }
+            .progress-book {
+                font-size: 10px;
+                padding: 0 8px;
+            }
+        }
         .duration-chart {
             max-width: 100%;
             overflow-x: auto;
@@ -764,6 +874,7 @@ BookStats.createAppStructure = function(years) {
                     <button class="bookstats-tab active" data-tab="pie">Languages</button>
                     <button class="bookstats-tab" data-tab="covers">Books</button>
                     <button class="bookstats-tab" data-tab="authors">Authors</button>
+                    <button class="bookstats-tab" data-tab="progress">Progress</button>
                     <button class="bookstats-tab" data-tab="timeline">Timeline</button>
                     <button class="bookstats-tab" data-tab="duration">Duration</button>
                     <button class="bookstats-tab" data-tab="monthly">Pages</button>
@@ -788,6 +899,11 @@ BookStats.createAppStructure = function(years) {
                 <div class="bookstats-tab-content" data-tab-content="authors">
                     <h2 id="bookstats-authorsTitle" style="text-align: center; margin-bottom: 20px;">Number of Books per Author</h2>
                     <div id="bookstats-authors"></div>
+                </div>
+
+                <div class="bookstats-tab-content" data-tab-content="progress">
+                    <h2 style="text-align: center; margin-bottom: 20px;">Reading Progress by Language</h2>
+                    <div id="bookstats-progress"></div>
                 </div>
 
                 <div class="bookstats-tab-content" data-tab-content="timeline">
