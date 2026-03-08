@@ -52,14 +52,14 @@ BookStats.getChartColors = function() {
         bg: [
             BookStats.colors.korean.bg,
             BookStats.colors.japanese.bg,
-            BookStats.colors.chineseLight.bg,
-            BookStats.colors.chineseDark.bg
+            BookStats.colors.chineseDark.bg,
+            BookStats.colors.chineseLight.bg
         ],
         border: [
             BookStats.colors.korean.border,
             BookStats.colors.japanese.border,
-            BookStats.colors.chineseLight.border,
-            BookStats.colors.chineseDark.border
+            BookStats.colors.chineseDark.border,
+            BookStats.colors.chineseLight.border
         ]
     };
 };

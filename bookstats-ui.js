@@ -305,10 +305,10 @@ BookStats.injectStyles = function() {
             background-color: ${BookStats.colors.japanese.bg};
         }
         .progress-book-chinese-traditional {
-            background-color: ${BookStats.colors.chineseLight.bg};
+            background-color: ${BookStats.colors.chineseDark.bg};
         }
         .progress-book-chinese-simplified {
-            background-color: ${BookStats.colors.chineseDark.bg};
+            background-color: ${BookStats.colors.chineseLight.bg};
         }
         .progress-book-current {
             outline: 2px dashed rgba(255, 255, 255, 0.75);
