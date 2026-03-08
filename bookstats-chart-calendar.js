@@ -150,7 +150,7 @@ BookStats.generateMonthCalendar = function(year, month, booksWithDates) {
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
-    const startDayOfWeek = firstDay.getDay(); // 0 = Sunday
+    const startDayOfWeek = (firstDay.getDay() + 6) % 7; // 0 = Monday
 
     const languageOrder = ['Korean', 'Japanese', 'Chinese', 'Other'];
     const booksByLanguage = {};
@@ -200,7 +200,7 @@ BookStats.generateMonthCalendar = function(year, month, booksWithDates) {
     
     // Calendar header with day names
     html += '<div class="calendar-header">';
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     dayNames.forEach(day => {
         html += `<div class="calendar-day-name">${day}</div>`;
     });
