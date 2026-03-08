@@ -875,7 +875,6 @@ BookStats.createAppStructure = function(years) {
                     <button class="bookstats-tab" data-tab="covers">Books</button>
                     <button class="bookstats-tab" data-tab="authors">Authors</button>
                     <button class="bookstats-tab" data-tab="progress">Progress</button>
-                    <button class="bookstats-tab" data-tab="timeline">Timeline</button>
                     <button class="bookstats-tab" data-tab="duration">Duration</button>
                     <button class="bookstats-tab" data-tab="monthly">Pages</button>
                     <button class="bookstats-tab" data-tab="calendar">Calendar</button>
@@ -904,11 +903,6 @@ BookStats.createAppStructure = function(years) {
                 <div class="bookstats-tab-content" data-tab-content="progress">
                     <h2 style="text-align: center; margin-bottom: 20px;">Reading Progress by Language</h2>
                     <div id="bookstats-progress"></div>
-                </div>
-
-                <div class="bookstats-tab-content" data-tab-content="timeline">
-                    <h2 style="text-align: center; margin-bottom: 30px;">Timeline</h2>
-                    <div id="bookstats-timeline"></div>
                 </div>
 
                 <div class="bookstats-tab-content" data-tab-content="duration">

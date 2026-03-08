@@ -14,7 +14,6 @@ function loadBookstatsModules() {
         'bookstats-chart-covers.js',
         'bookstats-chart-authors.js',
         'bookstats-chart-progress.js',
-        'bookstats-chart-timeline.js',
         'bookstats-chart-duration.js',
         'bookstats-chart-monthly.js',
         'bookstats-chart-calendar.js'
@@ -30,7 +29,6 @@ function loadBookstatsModules() {
     if (!window.BookStats.createCoversGrid) requiredModules.push('bookstats-chart-covers.js');
     if (!window.BookStats.createAuthorTable) requiredModules.push('bookstats-chart-authors.js');
     if (!window.BookStats.createProgressChart) requiredModules.push('bookstats-chart-progress.js');
-    if (!window.BookStats.createTimelineChart) requiredModules.push('bookstats-chart-timeline.js');
     if (!window.BookStats.createDurationChart) requiredModules.push('bookstats-chart-duration.js');
     if (!window.BookStats.createMonthlyChart) requiredModules.push('bookstats-chart-monthly.js');
     if (!window.BookStats.createCalendarChart) requiredModules.push('bookstats-chart-calendar.js');
@@ -127,7 +125,6 @@ async function initializeBookStats() {
             BookStats.createCoversGrid(completedData, selectedYear);
             BookStats.createAuthorTable(completedData, selectedYear);
             BookStats.createProgressChart(filteredData);
-            BookStats.createTimelineChart(filteredData);
             BookStats.createDurationChart(completedData);
             BookStats.createMonthlyChart(completedData);
             BookStats.createCalendarChart(filteredData);
