@@ -201,17 +201,14 @@ BookStats.injectStyles = function() {
         .bookstats-tab-content.active {
             display: block;
         }
-        .timeline-wrapper {
-            overflow-x: auto;
-        }
-        .timeline-month-shortcuts {
+        .progress-month-shortcuts {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
             justify-content: center;
             margin-bottom: 12px;
         }
-        .timeline-month-button {
+        .progress-month-button {
             border: 1px solid #c9c2b8;
             background-color: #fdfbf7;
             color: #3b3b3b;
@@ -221,122 +218,10 @@ BookStats.injectStyles = function() {
             cursor: pointer;
             transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
         }
-        .timeline-month-button:hover {
+        .progress-month-button:hover {
             background-color: #f5efe6;
             transform: translateY(-1px);
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-        }
-        .timeline-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .timeline-language {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-        }
-        .timeline-label {
-            font-weight: bold;
-            color: #333;
-            font-size: 14px;
-            min-width: 80px;
-            padding-top: 5px;
-        }
-        .timeline-track {
-            position: relative;
-            flex: 1;
-            min-width: 600px;
-            height: 60px;
-            background-color: #f5f5f5;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            padding: 5px;
-            overflow: visible;
-        }
-        .timeline-book {
-            position: absolute;
-            height: 50px;
-            padding: 4px 8px;
-            border-radius: 3px;
-            font-size: 11px;
-            color: white;
-            overflow: visible;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .timeline-book-label {
-            min-width: 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .timeline-cover {
-            position: absolute;
-            top: 50%;
-            left: 6px;
-            width: 64px;
-            height: 92px;
-            border-radius: 4px;
-            background-size: cover;
-            background-position: center;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
-            display: none;
-            z-index: 2;
-            transform: translateY(-50%);
-        }
-        .timeline-book:hover .timeline-cover {
-            display: block;
-        }
-        .timeline-book:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-        .timeline-book-korean {
-            background-color: ${BookStats.colors.korean.bg};
-        }
-        .timeline-book-japanese {
-            background-color: ${BookStats.colors.japanese.bg};
-        }
-        .timeline-book-chinese {
-            background-color: ${BookStats.colors.chineseDark.bg};
-        }
-        .timeline-axis {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 10px;
-            overflow: visible;
-        }
-        .timeline-axis-label {
-            min-width: 80px;
-        }
-        .timeline-axis-track {
-            flex: 1;
-            min-width: 600px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            color: #666;
-            padding: 0 5px;
-            position: relative;
-            height: 20px;
-            overflow: visible;
-        }
-        .timeline-tooltip {
-            position: absolute;
-            background-color: #333;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            z-index: 1000;
-            white-space: nowrap;
-            pointer-events: none;
         }
         .progress-chart {
             max-width: 960px;
