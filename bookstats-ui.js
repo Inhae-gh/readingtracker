@@ -561,16 +561,26 @@ BookStats.injectStyles = function() {
             gap: 25px;
             padding: 20px 0;
         }
+        #bookstats-covers-current .covers-grid {
+            grid-template-columns: repeat(auto-fit, minmax(180px, 180px));
+            justify-content: center;
+        }
         @media (max-width: 768px) {
             .covers-grid {
                 grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
                 gap: 20px;
+            }
+            #bookstats-covers-current .covers-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 140px));
             }
         }
         @media (max-width: 480px) {
             .covers-grid {
                 grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
                 gap: 15px;
+            }
+            #bookstats-covers-current .covers-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 120px));
             }
         }
         .cover-item {
@@ -723,6 +733,7 @@ BookStats.createAppStructure = function(years) {
             <div id="bookstats-content" style="display: none;">
                 <div class="bookstats-tabs">
                     <button class="bookstats-tab active" data-tab="pie">Languages</button>
+                    <button class="bookstats-tab" data-tab="covers-current">Reading</button>
                     <button class="bookstats-tab" data-tab="covers">Books</button>
                     <button class="bookstats-tab" data-tab="authors">Authors</button>
                     <button class="bookstats-tab" data-tab="progress">Progress</button>
@@ -735,6 +746,11 @@ BookStats.createAppStructure = function(years) {
                     <div class="chart-container">
                         <canvas id="bookstats-languageChart"></canvas>
                     </div>
+                </div>
+
+                <div class="bookstats-tab-content" data-tab-content="covers-current">
+                    <h2 style="text-align: center; margin-bottom: 30px;">Currently Reading</h2>
+                    <div id="bookstats-covers-current"></div>
                 </div>
 
                 <div class="bookstats-tab-content" data-tab-content="covers">

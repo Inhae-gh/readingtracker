@@ -1,6 +1,27 @@
-// BookStats Covers Grid - Display finished books as a grid of covers
+// BookStats Covers Grid - Display reading and finished books as cover grids
 
 window.BookStats = window.BookStats || {};
+
+BookStats.createCurrentReadingCoversGrid = function(data) {
+    const container = document.getElementById('bookstats-covers-current');
+    if (!container) return;
+
+    const currentBooks = data.filter(book => book.currentlyReading);
+
+    if (currentBooks.length === 0) {
+        container.innerHTML = '<p style="color: #999; text-align: center;">No books currently in progress</p>';
+        return;
+    }
+
+    // Sort by start date, most recent first. Undated books are shown last.
+    const sortedBooks = currentBooks.sort((a, b) => {
+        const dateA = a.startDate ? BookStats.parseLocalDate(a.startDate) : new Date(0);
+        const dateB = b.startDate ? BookStats.parseLocalDate(b.startDate) : new Date(0);
+        return dateB - dateA;
+    });
+
+    container.innerHTML = BookStats.generateCoversGrid(sortedBooks);
+};
 
 BookStats.createCoversGrid = function(data, selectedYear) {
     const container = document.getElementById('bookstats-covers');

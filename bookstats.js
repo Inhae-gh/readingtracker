@@ -119,6 +119,7 @@ async function initializeBookStats() {
 
             // Create/update charts
             BookStats.createPieChart(completedData, selectedYear);
+            BookStats.createCurrentReadingCoversGrid(filteredData);
             BookStats.createCoversGrid(completedData, selectedYear);
             BookStats.createAuthorTable(completedData, selectedYear);
             BookStats.createProgressChart(filteredData);
