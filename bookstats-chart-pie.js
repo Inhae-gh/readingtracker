@@ -44,6 +44,30 @@ const donutSliceLabelsPlugin = {
     }
 };
 
+const donutCenterTotalPlugin = {
+    id: 'donutCenterTotal',
+    afterDatasetsDraw(chart) {
+        const dataset = chart.data.datasets[0];
+        if (!dataset) return;
+
+        const values = dataset.data || [];
+        const total = values.reduce((sum, value) => sum + (value || 0), 0);
+
+        const meta = chart.getDatasetMeta(0);
+        const firstArc = meta?.data?.[0];
+        if (!firstArc) return;
+
+        const ctx = chart.ctx;
+        ctx.save();
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#9e6d6d';
+        ctx.font = `700 ${window.innerWidth < 480 ? 18 : 24}px Segoe UI, Tahoma, sans-serif`;
+        ctx.fillText(`${total}`, firstArc.x, firstArc.y);
+        ctx.restore();
+    }
+};
+
 BookStats.createPieChart = function(data, selectedYear) {
     const pieTab = document.querySelector('[data-tab-content="pie"]');
     if (!pieTab) return;
@@ -109,11 +133,6 @@ BookStats.createPieChart = function(data, selectedYear) {
     }
 
     const languageCounts = BookStats.processLanguageData(filteredData);
-    const total = Object.values(languageCounts).reduce((a, b) => a + b, 0);
-    const totalElement = document.getElementById('bookstats-totalBooks');
-    if (totalElement) {
-        totalElement.textContent = total;
-    }
 
     const ctx = document.getElementById('bookstats-languageChart').getContext('2d');
     
@@ -139,7 +158,7 @@ BookStats.createPieChart = function(data, selectedYear) {
 
     pieChartInstance = new Chart(ctx, {
         type: 'doughnut',
-        plugins: [donutSliceLabelsPlugin],
+        plugins: [donutSliceLabelsPlugin, donutCenterTotalPlugin],
         data: {
             labels: labels,
             datasets: [{

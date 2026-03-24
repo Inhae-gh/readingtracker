@@ -116,9 +116,6 @@ async function initializeBookStats() {
         const updateCharts = (selectedYear) => {
             const filteredData = BookStats.filterDataByYear(allData, selectedYear);
             const completedData = filteredData.filter(book => !book.currentlyReading);
-            
-            // Process data to count books by language
-            const languageCounts = BookStats.processLanguageData(completedData);
 
             // Create/update charts
             BookStats.createPieChart(completedData, selectedYear);
@@ -128,10 +125,6 @@ async function initializeBookStats() {
             BookStats.createDurationChart(completedData);
             BookStats.createMonthlyChart(completedData);
             BookStats.createCalendarChart(filteredData);
-
-            // Display total books
-            const total = Object.values(languageCounts).reduce((a, b) => a + b, 0);
-            document.getElementById('bookstats-totalBooks').textContent = total;
         };
         
         // Show content and hide loading
