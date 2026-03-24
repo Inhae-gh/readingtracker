@@ -33,17 +33,13 @@ BookStats.normalizeLanguage = function(language) {
 
 // Get color for a language
 BookStats.getLanguageColor = function(language) {
-    const normalized = this.normalizeLanguage(language);
-    switch (normalized) {
-        case 'Korean':
-            return this.colors.korean.bg;
-        case 'Japanese':
-            return this.colors.japanese.bg;
-        case 'Chinese':
-            return this.colors.chineseDark.bg;
-        default:
-            return '#999';
-    }
+    const lang = (language || '').toLowerCase();
+    if (lang.includes('korean')) return this.colors.korean.bg;
+    if (lang.includes('japanese')) return this.colors.japanese.bg;
+    if (lang.includes('traditional')) return this.colors.chineseDark.bg;
+    if (lang.includes('simplified')) return this.colors.chineseLight.bg;
+    if (lang.includes('chinese')) return this.colors.chineseDark.bg;
+    return '#999';
 };
 
 // Get all chart colors as arrays for Chart.js

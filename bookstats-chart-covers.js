@@ -104,18 +104,9 @@ BookStats.generateCoversGrid = function(books) {
     
     books.forEach(book => {
         const coverUrl = BookStats.extractImageUrl(book.url);
-        const normalizedLang = BookStats.normalizeLanguage(book.language);
         const color = BookStats.getLanguageColor(book.language);
-        
-        // Format finish date nicely
-        const finishDate = BookStats.parseLocalDate(book.finishDate);
-        const finishDateStr = finishDate.toLocaleDateString('en-US', { 
-            month: 'short', 
-            day: 'numeric', 
-            year: 'numeric' 
-        });
 
-        html += '<div class="cover-item">';
+        html += `<div class="cover-item" style="--lang-color: ${color}">`;
         
         // Wrap cover in link if available
         if (book.link) {
@@ -135,8 +126,6 @@ BookStats.generateCoversGrid = function(books) {
         html += '<div class="cover-details">';
         html += `<div class="cover-title">${BookStats.escapeHtml(book.name)}</div>`;
         html += `<div class="cover-author">${BookStats.escapeHtml(book.author || 'Unknown Author')}</div>`;
-        html += `<div class="cover-date">${finishDateStr}</div>`;
-        html += `<div class="cover-language" style="background-color: ${color}">${normalizedLang}</div>`;
         html += '</div>';
         
         html += '</div>';

@@ -595,13 +595,14 @@ BookStats.injectStyles = function() {
             padding: 12px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 1px;
             flex: 1;
+            background-color: #fff;
         }
         .cover-title {
             font-weight: 600;
             font-size: 13px;
-            color: #2c3e50;
+            color: var(--lang-color, #2c3e50);
             line-height: 1.3;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -612,28 +613,12 @@ BookStats.injectStyles = function() {
         }
         .cover-author {
             font-size: 11px;
-            color: #666;
+            color: var(--lang-color, #666);
             display: -webkit-box;
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-        .cover-date {
-            font-size: 11px;
-            color: #888;
-            margin-top: auto;
-        }
-        .cover-language {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 600;
-            color: white;
-            text-align: center;
-            margin-top: 4px;
-            align-self: flex-start;
         }
     `;
     document.head.appendChild(style);
