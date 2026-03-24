@@ -66,8 +66,7 @@ BookStats.createProgressChart = function(data) {
                 lane,
                 colorClass: getColorClass(book.language, lane),
                 startDateObj,
-                finishDateObj,
-                isCurrent: !book.finishDate && !!book.currentlyReading
+                finishDateObj
             };
         })
         .filter(Boolean);
@@ -140,7 +139,7 @@ BookStats.createProgressChart = function(data) {
             const width = Math.max(40, daySpan * pxPerDay - 2);
             const days = Math.max(1, daySpan);
             const title = `${book.name} (${days} days)\n${formatDate(book.startDateObj)} - ${formatDate(book.finishDateObj)}`;
-            const bookClass = 'progress-book progress-book-' + book.colorClass + (book.isCurrent ? ' progress-book-current' : '');
+            const bookClass = 'progress-book progress-book-' + book.colorClass;
             const shortName = book.name.length > 28 ? (book.name.slice(0, 25) + '...') : book.name;
             const labelText = width < 88 ? `${days}d` : `${shortName} • ${days}d`;
 

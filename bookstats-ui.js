@@ -295,10 +295,6 @@ BookStats.injectStyles = function() {
         .progress-book-chinese-simplified {
             background-color: ${BookStats.colors.chineseLight.bg};
         }
-        .progress-book-current {
-            outline: 2px dashed rgba(255, 255, 255, 0.75);
-            outline-offset: -3px;
-        }
         .progress-empty {
             text-align: center;
             color: #857c72;
