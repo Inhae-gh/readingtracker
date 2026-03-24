@@ -84,17 +84,33 @@ BookStats.injectStyles = function() {
         .breakdown-item:last-child {
             border-bottom: none;
         }
+        .authors-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
         .authors-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
             font-size: 14px;
+            table-layout: fixed;
+        }
+        .authors-col-count {
+            width: 6.5rem;
+        }
+        .authors-col-author {
+            width: auto;
         }
         .authors-table th,
         .authors-table td {
             text-align: left;
             padding: 10px 12px;
             border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        .authors-table th:first-child,
+        .authors-table td:first-child {
+            overflow-wrap: anywhere;
         }
         .authors-table th {
             font-size: 12px;

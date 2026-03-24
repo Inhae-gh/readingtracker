@@ -46,7 +46,12 @@ BookStats.createAuthorTable = function(data, selectedYear) {
     }).join('');
 
     authorsContainer.innerHTML = `
+        <div class="authors-table-wrap">
         <table class="authors-table">
+            <colgroup>
+                <col class="authors-col-author">
+                <col class="authors-col-count">
+            </colgroup>
             <thead>
                 <tr>
                     <th>Author</th>
@@ -57,5 +62,6 @@ BookStats.createAuthorTable = function(data, selectedYear) {
                 ${rows}
             </tbody>
         </table>
+        </div>
     `;
 };
