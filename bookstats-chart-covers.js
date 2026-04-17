@@ -129,6 +129,11 @@ BookStats.generateCoversGrid = function(books) {
 
         html += `<div class="cover-item" style="--lang-color: ${color}">`;
         
+        // Add favorite sticker if applicable
+        if (book.favorite && typeof STICKER_IMAGE_URL !== 'undefined' && STICKER_IMAGE_URL) {
+            html += `<img src="${STICKER_IMAGE_URL}" class="cover-sticker" alt="Favorite">`;
+        }
+        
         // Wrap cover in link if available
         if (book.link) {
             html += `<a href="${BookStats.escapeHtml(book.link)}" target="_blank" rel="noopener noreferrer" class="cover-link">`;

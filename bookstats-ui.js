@@ -589,9 +589,9 @@ BookStats.injectStyles = function() {
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             border-radius: 8px;
-            overflow: hidden;
             background-color: #fff;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
         .cover-item:hover {
             transform: translateY(-5px);
@@ -604,6 +604,19 @@ BookStats.injectStyles = function() {
             background-position: center;
             background-color: #f0f0f0;
             border-bottom: 2px solid #e0e0e0;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        .cover-sticker {
+            position: absolute;
+            bottom: 20px;
+            left: -20px;
+            width: 150px; /* Larger */
+            height: 150px; /* Larger */
+            z-index: 100; /* Make it pop out more */
+            pointer-events: none;
+            filter: drop-shadow(0 6px 10px rgba(0,0,0,0.4)); /* More pronounced shadow */
+            transform: rotate(-20deg); /* Tilt anti-clockwise */
         }
         .cover-image-placeholder {
             display: flex;
@@ -632,6 +645,7 @@ BookStats.injectStyles = function() {
             overflow: hidden;
             text-overflow: ellipsis;
             min-height: 33px;
+            text-align: right;
         }
         .cover-author {
             font-size: 11px;
@@ -641,6 +655,7 @@ BookStats.injectStyles = function() {
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
+            text-align: right;
         }
     `;
     document.head.appendChild(style);

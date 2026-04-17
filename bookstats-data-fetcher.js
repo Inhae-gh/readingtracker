@@ -50,6 +50,7 @@ BookStats.parseCSV = function(csv) {
     const finishDateIndex = normalizedHeaders.findIndex(h => h === 'finished');
     const pagesIndex = normalizedHeaders.findIndex(h => h === 'pages');
     const dnfIndex = normalizedHeaders.findIndex(h => h === 'dnf');
+    const favoriteIndex = normalizedHeaders.findIndex(h => h === 'favourite' || h === 'favourite?');
     const urlIndex = normalizedHeaders.findIndex(h => h === 'url');
     const linkIndex = normalizedHeaders.findIndex(h => h === 'link');
     const authorIndex = normalizedHeaders.findIndex(h => h === 'author' || h === 'authors');
@@ -70,6 +71,10 @@ BookStats.parseCSV = function(csv) {
             if (values[languageIndex]) {
                 const dnfValue = dnfIndex !== -1 ? values[dnfIndex].trim().toLowerCase() : '';
                 const isDNF = dnfValue === 'true' || dnfValue === 'yes' || dnfValue === '1' || dnfValue === 'x';
+                
+                const favoriteValue = favoriteIndex !== -1 ? values[favoriteIndex].trim().toLowerCase() : '';
+                const isFavorite = favoriteValue === 'true' || favoriteValue === 'yes' || favoriteValue === '1' || favoriteValue === 'x';
+
                 const finishDateValue = finishDateIndex !== -1 ? values[finishDateIndex].trim() : '';
                 const isCurrentlyReading = !finishDateValue && !isDNF;
 
@@ -83,6 +88,7 @@ BookStats.parseCSV = function(csv) {
                     url: urlIndex !== -1 ? values[urlIndex].trim() : '',
                     link: linkIndex !== -1 ? values[linkIndex].trim() : '',
                     dnf: isDNF,
+                    favorite: isFavorite,
                     currentlyReading: isCurrentlyReading
                 });
             }
