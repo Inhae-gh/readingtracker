@@ -611,12 +611,12 @@ BookStats.injectStyles = function() {
             position: absolute;
             bottom: 20px;
             left: -20px;
-            width: 150px; /* Larger */
-            height: 150px; /* Larger */
+            width: 110px; /* Larger */
+            height: 110px; /* Larger */
             z-index: 100; /* Make it pop out more */
             pointer-events: none;
-            filter: drop-shadow(0 6px 10px rgba(0,0,0,0.4)); /* More pronounced shadow */
-            transform: rotate(-20deg); /* Tilt anti-clockwise */
+            // filter: drop-shadow(0 6px 10px rgba(0,0,0,0.4)); /* More pronounced shadow */
+            transform: rotate(-10deg); /* Tilt anti-clockwise */
         }
         .cover-image-placeholder {
             display: flex;
