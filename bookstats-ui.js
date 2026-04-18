@@ -607,6 +607,16 @@ BookStats.injectStyles = function() {
             border-top-left-radius: 8px;
             border-top-right-radius: 8px;
         }
+        .cover-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+        .cover-item > .cover-link {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
         .cover-sticker {
             position: absolute;
             bottom: 20px;

@@ -134,7 +134,7 @@ BookStats.generateCoversGrid = function(books) {
             html += `<img src="${STICKER_IMAGE_URL}" class="cover-sticker" alt="Favorite">`;
         }
         
-        // Wrap cover in link if available
+        // Wrap entire cover content in link if available
         if (book.link) {
             html += `<a href="${BookStats.escapeHtml(book.link)}" target="_blank" rel="noopener noreferrer" class="cover-link">`;
         }
@@ -145,14 +145,14 @@ BookStats.generateCoversGrid = function(books) {
             html += `<div class="cover-image cover-image-placeholder" style="background-color: ${color}"></div>`;
         }
         
-        if (book.link) {
-            html += '</a>';
-        }
-        
         html += '<div class="cover-details">';
         html += `<div class="cover-title">${BookStats.escapeHtml(book.name)}</div>`;
         html += `<div class="cover-author">${BookStats.escapeHtml(book.author || 'Unknown Author')}</div>`;
         html += '</div>';
+        
+        if (book.link) {
+            html += '</a>';
+        }
         
         html += '</div>';
     });

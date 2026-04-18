@@ -51,8 +51,9 @@ BookStats.parseCSV = function(csv) {
     const pagesIndex = normalizedHeaders.findIndex(h => h === 'pages');
     const dnfIndex = normalizedHeaders.findIndex(h => h === 'dnf');
     const favoriteIndex = normalizedHeaders.findIndex(h => h === 'favourite' || h === 'favourite?');
-    const urlIndex = normalizedHeaders.findIndex(h => h === 'url');
-    const linkIndex = normalizedHeaders.findIndex(h => h === 'link');
+    const urlIndex = normalizedHeaders.findIndex(h => h === 'cover');
+    const blogIndex = normalizedHeaders.findIndex(h => h === 'blog');
+    const mastodonIndex = normalizedHeaders.findIndex(h => h === 'mastodon');
     const authorIndex = normalizedHeaders.findIndex(h => h === 'author' || h === 'authors');
 
     if (languageIndex === -1) {
@@ -86,7 +87,8 @@ BookStats.parseCSV = function(csv) {
                     pages: pagesIndex !== -1 ? parseInt(values[pagesIndex].trim()) || 0 : 0,
                     author: authorIndex !== -1 ? values[authorIndex].trim() : '',
                     url: urlIndex !== -1 ? values[urlIndex].trim() : '',
-                    link: linkIndex !== -1 ? values[linkIndex].trim() : '',
+                    link: blogIndex !== -1 && values[blogIndex].trim() ? values[blogIndex].trim() : 
+                          (mastodonIndex !== -1 ? values[mastodonIndex].trim() : ''),
                     dnf: isDNF,
                     favorite: isFavorite,
                     currentlyReading: isCurrentlyReading
