@@ -16,7 +16,8 @@ function loadBookstatsModules() {
         'bookstats-chart-progress.js',
         'bookstats-chart-duration.js',
         'bookstats-chart-monthly.js',
-        'bookstats-chart-calendar.js'
+        'bookstats-chart-calendar.js',
+        'bookstats-chart-ranking.js'
     ];
 
     // Check which modules are already loaded by checking for key functions
@@ -32,6 +33,7 @@ function loadBookstatsModules() {
     if (!window.BookStats.createDurationChart) requiredModules.push('bookstats-chart-duration.js');
     if (!window.BookStats.createMonthlyChart) requiredModules.push('bookstats-chart-monthly.js');
     if (!window.BookStats.createCalendarChart) requiredModules.push('bookstats-chart-calendar.js');
+    if (!window.BookStats.createRankingChart) requiredModules.push('bookstats-chart-ranking.js');
 
     // If all modules are already loaded, resolve immediately
     if (requiredModules.length === 0) {
@@ -126,6 +128,7 @@ async function initializeBookStats() {
             BookStats.createDurationChart(completedData);
             BookStats.createMonthlyChart(completedData);
             BookStats.createCalendarChart(filteredData);
+            BookStats.createRankingChart(completedData);
         };
         
         // Show content and hide loading

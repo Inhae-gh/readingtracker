@@ -667,6 +667,75 @@ BookStats.injectStyles = function() {
             text-overflow: ellipsis;
             text-align: right;
         }
+        .ranking-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        @media (max-width: 480px) {
+            .ranking-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .ranking-card {
+            background-color: #fdfbf7;
+            border: 1px solid #e4ddd2;
+            border-radius: 10px;
+            padding: 20px 20px 16px;
+        }
+        .ranking-title {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .ranking-podium {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 12px;
+            padding-bottom: 4px;
+        }
+        .ranking-bar-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            gap: 6px;
+        }
+        .ranking-bar {
+            width: 100%;
+            border-radius: 5px 5px 0 0;
+            position: relative;
+        }
+        .ranking-bar-count {
+            position: absolute;
+            top: 8px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .ranking-bar-position {
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+        }
+        .ranking-bar-label {
+            font-size: 11px;
+            color: #777;
+            text-align: center;
+            height: 2.8em;
+            line-height: 1.4;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
     `;
     document.head.appendChild(style);
 };
@@ -765,6 +834,7 @@ BookStats.createAppStructure = function(years) {
                     <button class="bookstats-tab" data-tab="duration">Duration</button>
                     <button class="bookstats-tab" data-tab="monthly">Pages</button>
                     <button class="bookstats-tab" data-tab="calendar">Calendar</button>
+                    <button class="bookstats-tab" data-tab="ranking">Ranking</button>
                 </div>
 
                 <div class="bookstats-tab-content active" data-tab-content="pie">
@@ -808,6 +878,10 @@ BookStats.createAppStructure = function(years) {
                 <div class="bookstats-tab-content" data-tab-content="calendar">
                     <h2 style="text-align: center; margin-bottom: 30px;">Monthly Calendar</h2>
                     <div id="bookstats-calendar"></div>
+                </div>
+
+                <div class="bookstats-tab-content" data-tab-content="ranking">
+                    <div id="bookstats-ranking"></div>
                 </div>
             </div>
         </div>
