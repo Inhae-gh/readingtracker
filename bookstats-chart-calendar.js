@@ -2,7 +2,141 @@
 
 window.BookStats = window.BookStats || {};
 
-BookStats.createCalendarChart = function(data) {
+BookStats._mastodonCache = null;
+
+BookStats.titleToHashtag = function(title) {
+    return title.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
+};
+
+BookStats.fetchMastodonPosts = async function(bookHashtagNames) {
+    if (BookStats._mastodonCache !== null) return BookStats._mastodonCache;
+
+    if (typeof MASTODON_ACCOUNT === 'undefined' || !MASTODON_ACCOUNT) {
+        BookStats._mastodonCache = {};
+        return {};
+    }
+
+    const parts = MASTODON_ACCOUNT.replace(/^@/, '').split('@');
+    if (parts.length < 2) {
+        BookStats._mastodonCache = {};
+        return {};
+    }
+    const username = parts[0];
+    const instance = parts[1];
+    const bookHashtags = new Set(bookHashtagNames);
+
+    try {
+        const lookupRes = await fetch(`https://${instance}/api/v1/accounts/lookup?acct=${username}`);
+        if (!lookupRes.ok) throw new Error(`Account lookup failed (HTTP ${lookupRes.status})`);
+        const account = await lookupRes.json();
+
+        const postsByDate = {};
+        let url = `https://${instance}/api/v1/accounts/${account.id}/statuses?limit=40&exclude_reblogs=true`;
+        let fetched = 0;
+
+        while (url && fetched < 500) {
+            const res = await fetch(url);
+            if (!res.ok) break;
+            const statuses = await res.json();
+            if (!statuses.length) break;
+
+            statuses.forEach(status => {
+                const matchingTag = (status.tags || []).find(t => bookHashtags.has(t.name.toLowerCase()));
+                if (!matchingTag) return;
+                const date = status.created_at.slice(0, 10);
+                if (!postsByDate[date]) postsByDate[date] = [];
+                const images = (status.media_attachments || [])
+                    .filter(a => a.type === 'image')
+                    .map(a => ({ url: a.preview_url || a.url, alt: a.description || '' }));
+                const finished = (status.tags || []).some(t => t.name.toLowerCase() === 'finishedreading');
+                postsByDate[date].push({
+                    content: status.content,
+                    date,
+                    url: status.url,
+                    bookTag: matchingTag.name,
+                    images,
+                    finished
+                });
+            });
+
+            fetched += statuses.length;
+            const linkHeader = res.headers.get('Link');
+            url = null;
+            if (linkHeader) {
+                const match = linkHeader.match(/<([^>]+)>;\s*rel="next"/);
+                if (match) url = match[1];
+            }
+        }
+
+        BookStats._mastodonCache = postsByDate;
+        return postsByDate;
+    } catch (e) {
+        console.warn('Mastodon fetch failed:', e);
+        BookStats._mastodonCache = {};
+        return {};
+    }
+};
+
+BookStats.showMastodonPopup = function(dateKey, anchorEl) {
+    const existing = document.getElementById('bookstats-mastodon-popup');
+    if (existing) {
+        existing.remove();
+        return;
+    }
+
+    const posts = (BookStats._mastodonPostsForDay || {})[dateKey] || [];
+    if (!posts.length) return;
+
+    let html = '<div id="bookstats-mastodon-popup" class="mastodon-popup">';
+    html += '<button class="mastodon-popup-close" aria-label="Close">×</button>';
+    posts.forEach(post => {
+        html += '<div class="mastodon-popup-post">';
+        html += `<div class="mastodon-popup-content">${post.content}</div>`;
+        if (post.images && post.images.length > 0) {
+            html += '<div class="mastodon-popup-images">';
+            post.images.forEach(img => {
+                html += `<img class="mastodon-popup-image" src="${img.url}" alt="${img.alt}">`;
+            });
+            html += '</div>';
+        }
+        html += '<div class="mastodon-popup-footer">';
+        html += `<span class="mastodon-popup-date">${post.date}</span>`;
+        html += `<a href="${post.url}" target="_blank" rel="noopener" class="mastodon-popup-link">View on Mastodon ↗</a>`;
+        html += '</div></div>';
+    });
+    html += '</div>';
+
+    document.body.insertAdjacentHTML('beforeend', html);
+    const popup = document.getElementById('bookstats-mastodon-popup');
+
+    const rect = anchorEl.getBoundingClientRect();
+
+    // Measure popup height before committing to a position
+    popup.style.visibility = 'hidden';
+    popup.style.top = '0px';
+    const popupHeight = popup.offsetHeight;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    const top = spaceBelow >= popupHeight || spaceBelow >= spaceAbove
+        ? rect.bottom + window.scrollY + 6
+        : rect.top + window.scrollY - popupHeight - 6;
+
+    popup.style.top = top + 'px';
+    popup.style.left = Math.max(8, Math.min(rect.left + window.scrollX, window.innerWidth - 310)) + 'px';
+    popup.style.visibility = 'visible';
+
+    popup.querySelector('.mastodon-popup-close').addEventListener('click', () => popup.remove());
+    setTimeout(() => {
+        document.addEventListener('click', function handler(e) {
+            if (!popup.contains(e.target) && e.target !== anchorEl) {
+                popup.remove();
+                document.removeEventListener('click', handler);
+            }
+        });
+    }, 0);
+};
+
+BookStats.createCalendarChart = async function(data) {
     const container = document.getElementById('bookstats-calendar');
     if (!container) return;
 
@@ -71,10 +205,41 @@ BookStats.createCalendarChart = function(data) {
     html += '</select>';
     html += '</div>';
 
+    // Build cover map, language map and hashtag set from all books in current data.
+    // Use book.hashtag if set, otherwise derive from the title.
+    const bookCoverMap = {};
+    const bookLanguageMap = {};
+    const bookHashtagNames = [];
+    data.forEach(book => {
+        const tag = book.hashtag ? book.hashtag.normalize('NFKC').toLowerCase() : BookStats.titleToHashtag(book.name);
+        const cover = BookStats.extractImageUrl(book.url || '');
+        if (cover) bookCoverMap[tag] = cover;
+        bookLanguageMap[tag] = (book.language || '').toLowerCase();
+        bookHashtagNames.push(tag);
+    });
+
+    // Fetch Mastodon posts (cached after first call, gracefully skipped if not available)
+    let mastodonPosts = {};
+    try {
+        if (typeof BookStats.fetchMastodonPosts === 'function') {
+            mastodonPosts = await BookStats.fetchMastodonPosts(bookHashtagNames);
+        }
+    } catch (e) {
+        console.warn('Mastodon fetch error:', e);
+    }
+
     // Generate calendar for selected month
-    html += BookStats.generateMonthCalendar(selectedYear, selectedMonth, booksWithDates);
+    html += BookStats.generateMonthCalendar(selectedYear, selectedMonth, booksWithDates, mastodonPosts, bookCoverMap, bookLanguageMap);
 
     container.innerHTML = html;
+
+    // Wire up elephant buttons for Mastodon popups
+    container.querySelectorAll('.calendar-mastodon-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            BookStats.showMastodonPopup(btn.dataset.date, btn);
+        });
+    });
 
     // Add event listener for month change
     const monthSelect = document.getElementById('calendar-month-select');
@@ -146,58 +311,22 @@ BookStats.getAvailableMonths = function(booksWithDates) {
 };
 
 // Generate the calendar view for a specific month
-BookStats.generateMonthCalendar = function(year, month, booksWithDates) {
+BookStats.finishedStickerUrl = function(language) {
+    if (language.includes('korean'))      return 'https://notes.inhae.blog/wp-content/uploads/2026/04/IMG_5582.png';
+    if (language.includes('japanese'))    return 'https://notes.inhae.blog/wp-content/uploads/2026/04/IMG_5581.png';
+    if (language.includes('simplified'))  return 'https://notes.inhae.blog/wp-content/uploads/2026/04/IMG_5579.png';
+    if (language.includes('chinese'))     return 'https://notes.inhae.blog/wp-content/uploads/2026/04/IMG_5580.png';
+    return '';
+};
+
+BookStats.generateMonthCalendar = function(year, month, booksWithDates, mastodonPosts, bookCoverMap, bookLanguageMap) {
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
     const startDayOfWeek = (firstDay.getDay() + 6) % 7; // 0 = Monday
 
-    const languageOrder = ['Korean', 'Japanese', 'Chinese', 'Other'];
-    const booksByLanguage = {};
-    languageOrder.forEach(language => {
-        booksByLanguage[language] = [];
-    });
-
-    booksWithDates.forEach(book => {
-        const language = BookStats.normalizeLanguage(book.language || '');
-        if (!booksByLanguage[language]) {
-            booksByLanguage[language] = [];
-        }
-        booksByLanguage[language].push({
-            name: book.name,
-            url: book.url,
-            language,
-            startDate: BookStats.parseLocalDate(book.startDate),
-            finishDate: BookStats.parseLocalDate(book.finishDate),
-            startDateText: book.startDate,
-            finishDateText: book.finishDate
-        });
-    });
-
-    Object.values(booksByLanguage).forEach(list => {
-        list.sort((a, b) => a.startDate - b.startDate);
-    });
-
-    const getBookStartingOn = (language, date) => {
-        const list = booksByLanguage[language] || [];
-        return list.find(book => BookStats.isSameDay(book.startDate, date));
-    };
-
-    const getActiveBook = (language, date) => {
-        const list = booksByLanguage[language] || [];
-        let active = null;
-        list.forEach(book => {
-            if (book.startDate <= date && book.finishDate >= date) {
-                if (!active || book.startDate > active.startDate) {
-                    active = book;
-                }
-            }
-        });
-        return active;
-    };
-
     let html = '<div class="calendar-view">';
-    
+
     // Calendar header with day names
     html += '<div class="calendar-header">';
     const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -214,49 +343,41 @@ BookStats.generateMonthCalendar = function(year, month, booksWithDates) {
         html += '<div class="calendar-cell calendar-cell-empty"></div>';
     }
 
+    // Store posts by date for popup access
+    BookStats._mastodonPostsForDay = mastodonPosts || {};
+
     // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
         const cellDate = new Date(year, month, day);
         const isToday = this.isSameDay(cellDate, new Date());
+        const dateKey = BookStats.formatLocalDate(cellDate);
+        const dayPosts = mastodonPosts && mastodonPosts[dateKey];
 
         const todayClass = isToday ? ' calendar-cell-today' : '';
         html += `<div class="calendar-cell${todayClass}">`;
         html += `<div class="calendar-date">${day}</div>`;
-
-        html += '<div class="calendar-lines">';
-        languageOrder.forEach(language => {
-            const activeBook = getActiveBook(language, cellDate);
-            if (!activeBook) {
-                html += '<div class="calendar-language-row calendar-language-empty"></div>';
-                return;
+        if (dayPosts && dayPosts.length > 0) {
+            const bookTag = dayPosts[0].bookTag;
+            const coverUrl = bookCoverMap ? (bookCoverMap[bookTag.toLowerCase()] || '') : '';
+            const isFinished = dayPosts.some(p => p.finished);
+            if (isFinished) {
+                const lang = bookLanguageMap ? (bookLanguageMap[bookTag.toLowerCase()] || '') : '';
+                const stickerUrl = BookStats.finishedStickerUrl(lang);
+                if (stickerUrl) {
+                    html += `<img class="calendar-finished-badge" src="${stickerUrl}" alt="finished">`;
+                } else {
+                    html += `<span class="calendar-finished-badge">🎉</span>`;
+                }
             }
-
-            const nextDay = new Date(year, month, day + 1);
-            const startsNextDay = !!getBookStartingOn(language, nextDay);
-            const isStart = BookStats.isSameDay(activeBook.startDate, cellDate);
-            const endsToday = BookStats.isSameDay(activeBook.finishDate, cellDate);
-            const endsBeforeNext = BookStats.isSameDay(activeBook.finishDate, nextDay) && startsNextDay;
-            const shouldEndToday = endsToday || endsBeforeNext;
-
-            const lineTitle = `${activeBook.name}\n${activeBook.startDateText} - ${activeBook.finishDateText}`;
-            const langClass = activeBook.language.toLowerCase();
-            const coverUrl = BookStats.extractImageUrl(activeBook.url);
-            const coverStyle = coverUrl ? ` style="background-image: url('${coverUrl}')"` : '';
-            const coverClass = coverUrl ? ' calendar-cover-has-image' : ' calendar-cover-empty';
-            const startClass = isStart ? ' calendar-line-start' : '';
-            const endClass = shouldEndToday ? ' calendar-line-end' : '';
-
-            html += `<div class="calendar-language-row">`;
-            html += `<div class="calendar-line calendar-line-${langClass}${startClass}${endClass}" title="${lineTitle}" aria-label="${activeBook.name}">`;
-            if (isStart) {
-                html += `<span class="calendar-cover${coverClass}"${coverStyle}></span>`;
+            html += `<button class="calendar-mastodon-btn" data-date="${dateKey}" title="${isFinished ? 'Finished: ' : ''}#${bookTag}">`;
+            html += `<div class="calendar-mastodon-cover-wrap">`;
+            if (coverUrl) {
+                html += `<img class="calendar-mastodon-cover" src="${coverUrl}" alt="${bookTag}">`;
+            } else {
+                html += `<span class="calendar-mastodon-cover calendar-mastodon-cover-empty">🐘</span>`;
             }
-            html += `<span class="calendar-line-body"></span>`;
-            html += `</div>`;
-            html += `</div>`;
-        });
-        html += '</div>';
-        
+            html += `</div></button>`;
+        }
         html += '</div>';
     }
 

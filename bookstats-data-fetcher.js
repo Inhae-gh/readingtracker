@@ -54,6 +54,7 @@ BookStats.parseCSV = function(csv) {
     const urlIndex = normalizedHeaders.findIndex(h => h === 'cover');
     const blogIndex = normalizedHeaders.findIndex(h => h === 'blog');
     const mastodonIndex = normalizedHeaders.findIndex(h => h === 'mastodon');
+    const hashtagIndex = normalizedHeaders.findIndex(h => h === 'hashtag');
     const authorIndex = normalizedHeaders.findIndex(h => h === 'author' || h === 'authors');
 
     if (languageIndex === -1) {
@@ -87,6 +88,7 @@ BookStats.parseCSV = function(csv) {
                     pages: pagesIndex !== -1 ? parseInt(values[pagesIndex].trim()) || 0 : 0,
                     author: authorIndex !== -1 ? values[authorIndex].trim() : '',
                     url: urlIndex !== -1 ? values[urlIndex].trim() : '',
+                    hashtag: hashtagIndex !== -1 ? values[hashtagIndex].trim() : '',
                     link: blogIndex !== -1 && values[blogIndex].trim() ? values[blogIndex].trim() : 
                           (mastodonIndex !== -1 ? values[mastodonIndex].trim() : ''),
                     dnf: isDNF,

@@ -418,12 +418,16 @@ BookStats.injectStyles = function() {
             border: 1px solid #ddd;
         }
         .calendar-cell {
-            min-height: 80px;
+            min-height: 100px;
             border-right: 1px solid #ddd;
             border-bottom: 1px solid #ddd;
             padding: 5px;
             background-color: #ffffff;
             position: relative;
+            overflow: visible;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .calendar-cell-empty {
             background-color: #f9f9f9;
@@ -435,92 +439,130 @@ BookStats.injectStyles = function() {
             font-weight: bold;
             font-size: 12px;
             color: #333;
-            margin-bottom: 4px;
-        }
-        .calendar-lines {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin: 0 -5px;
-            padding-top: 2px;
-        }
-        .calendar-language-row {
-            height: 12px;
-            display: flex;
-            align-items: center;
-        }
-        .calendar-language-empty {
-            opacity: 0.2;
-        }
-        .calendar-line {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            height: 10px;
-            cursor: pointer;
-            transition: transform 0.15s ease;
-            position: relative;
-        }
-        .calendar-line:hover {
-            transform: scaleY(1.08);
-            z-index: 2;
-        }
-        .calendar-line-body {
-            flex: 1;
-            height: 4px;
-            border-radius: 0;
-            background-color: #999;
-            z-index: 1;
-        }
-        /* Offset the line a bit when a book starts on this day so the cover sits centered */
-        .calendar-line-start .calendar-line-body {
-            margin-left: 20px;
-            border-top-left-radius: 4px;
-            border-bottom-left-radius: 4px;
-        }
-        /* Stop the line a bit earlier on end dates so it doesn't touch the cell edge */
-        .calendar-line-end .calendar-line-body {
-            margin-right: 20px;
-            border-top-right-radius: 4px;
-            border-bottom-right-radius: 4px;
-        }
-        /* Cover thumbnail is centered over the start date and larger than before */
-        .calendar-cover {
-            width: 28px;
-            height: 40px;
-            border-radius: 3px;
-            background-size: cover;
-            background-position: center;
-            border: 1px solid rgba(0, 0, 0, 0.15);
-            transition: transform 0.12s ease, box-shadow 0.12s ease;
             position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 3;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+            top: 4px;
+            left: 4px;
         }
-        .calendar-cover-empty {
-            background-color: #f0f0f0;
+        .calendar-mastodon-btn {
+            display: block;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
         }
-        /* Enlarge cover on hover */
-        .calendar-cover:hover {
-            transform: translate(-50%, -50%) scale(1.9);
-            z-index: 6;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+        .calendar-mastodon-cover {
+            display: block;
+            width: 38px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 3px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+            margin: 0 auto;
         }
-        .calendar-line-korean .calendar-line-body {
-            background-color: ${BookStats.colors.korean.bg};
+        .calendar-mastodon-cover-empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 56px;
+            background: #f0f0f0;
+            border-radius: 3px;
+            font-size: 20px;
+            margin: 0 auto;
         }
-        .calendar-line-japanese .calendar-line-body {
-            background-color: ${BookStats.colors.japanese.bg};
+        .calendar-mastodon-btn:hover .calendar-mastodon-cover {
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
-        .calendar-line-chinese .calendar-line-body {
-            background-color: ${BookStats.colors.chineseDark.bg};
+        .calendar-mastodon-cover-wrap {
+            position: relative;
+            display: inline-block;
+            width: 38px;
+            margin: 0 auto;
         }
-        .calendar-line-other .calendar-line-body {
-            background-color: #999;
+        .calendar-finished-badge {
+            position: absolute;
+            top: -8px;
+            right: 8px;
+            height: 70%;
+            width: auto;
+            object-fit: contain;
+            transform: rotate(28deg);
+            transform-origin: bottom right;
+            pointer-events: none;
+            z-index: 5;
         }
+        .mastodon-popup {
+            position: absolute;
+            z-index: 1000;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 12px;
+        }
+        .mastodon-popup-close {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #666;
+            line-height: 1;
+            padding: 0;
+        }
+        .mastodon-popup-close:hover { color: #000; }
+        .mastodon-popup-post {
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .mastodon-popup-post:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .mastodon-popup-content {
+            font-size: 13px;
+            color: #222;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+        .mastodon-popup-content p { margin: 0 0 4px; }
+        .mastodon-popup-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        .mastodon-popup-image {
+            width: calc(50% - 3px);
+            border-radius: 6px;
+            object-fit: cover;
+            max-height: 150px;
+            cursor: pointer;
+        }
+        .mastodon-popup-images:has(.mastodon-popup-image:only-child) .mastodon-popup-image {
+            width: 100%;
+        }
+        .mastodon-popup-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #888;
+        }
+        .mastodon-popup-link {
+            color: #6364ff;
+            text-decoration: none;
+        }
+        .mastodon-popup-link:hover { text-decoration: underline; }
         .covers-month-filter {
             display: flex;
             align-items: center;
@@ -833,7 +875,7 @@ BookStats.createAppStructure = function(years) {
                     <button class="bookstats-tab" data-tab="progress">Progress</button>
                     <button class="bookstats-tab" data-tab="duration">Duration</button>
                     <button class="bookstats-tab" data-tab="monthly">Pages</button>
-                    <button class="bookstats-tab" data-tab="calendar">Calendar</button>
+                    <button class="bookstats-tab" data-tab="calendar">Updates</button>
                     <button class="bookstats-tab" data-tab="ranking">Ranking</button>
                 </div>
 
@@ -876,7 +918,7 @@ BookStats.createAppStructure = function(years) {
                 </div>
 
                 <div class="bookstats-tab-content" data-tab-content="calendar">
-                    <h2 style="text-align: center; margin-bottom: 30px;">Monthly Calendar</h2>
+                    <h2 style="text-align: center; margin-bottom: 30px;">Reading Updates</h2>
                     <div id="bookstats-calendar"></div>
                 </div>
 

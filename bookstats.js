@@ -17,7 +17,8 @@ function loadBookstatsModules() {
         'bookstats-chart-duration.js',
         'bookstats-chart-monthly.js',
         'bookstats-chart-calendar.js',
-        'bookstats-chart-ranking.js'
+        'bookstats-chart-ranking.js',
+        'bookstats-mastodon.js'
     ];
 
     // Check which modules are already loaded by checking for key functions
@@ -34,6 +35,7 @@ function loadBookstatsModules() {
     if (!window.BookStats.createMonthlyChart) requiredModules.push('bookstats-chart-monthly.js');
     if (!window.BookStats.createCalendarChart) requiredModules.push('bookstats-chart-calendar.js');
     if (!window.BookStats.createRankingChart) requiredModules.push('bookstats-chart-ranking.js');
+    if (!window.BookStats.fetchMastodonPosts) requiredModules.push('bookstats-mastodon.js');
 
     // If all modules are already loaded, resolve immediately
     if (requiredModules.length === 0) {
@@ -63,7 +65,7 @@ function loadBookstatsModules() {
     const loadPromises = requiredModules.map(module => {
         return new Promise((resolve, reject) => {
             const script = document.createElement('script');
-            script.src = baseUrl + module;
+            script.src = baseUrl + module + '?v=21';
             script.async = false;
             script.onload = () => resolve();
             script.onerror = () => reject(new Error(`Failed to load module: ${module}`));
