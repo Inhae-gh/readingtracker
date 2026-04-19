@@ -619,7 +619,7 @@ BookStats.injectStyles = function() {
         }
         .cover-sticker {
             position: absolute;
-            bottom: 20px;
+            bottom: 35px;
             left: -20px;
             width: 110px; /* Larger */
             height: 110px; /* Larger */
