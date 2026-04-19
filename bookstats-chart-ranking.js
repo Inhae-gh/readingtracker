@@ -71,7 +71,7 @@ BookStats._fastestReadByLanguage = function(data) {
 };
 
 BookStats._renderFavouritesPodium = function(languages) {
-    return BookStats._renderPodiumCard('Most favourite books', languages);
+    return BookStats._renderPodiumCard('Most favourite books per language', languages);
 };
 
 BookStats._renderPodiumCard = function(title, languages, options) {
