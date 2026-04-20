@@ -310,15 +310,6 @@ BookStats.getAvailableMonths = function(booksWithDates) {
     return Array.from(monthSet).sort();
 };
 
-// Generate the calendar view for a specific month
-BookStats.finishedStickerUrl = function(language) {
-    if (language.includes('korean'))      return 'https://notes.inhae.blog/wp-content/uploads/2026/04/IMG_5582.png';
-    if (language.includes('japanese'))    return 'https://notes.inhae.blog/wp-content/uploads/2026/04/IMG_5581.png';
-    if (language.includes('simplified'))  return 'https://notes.inhae.blog/wp-content/uploads/2026/04/IMG_5579.png';
-    if (language.includes('chinese'))     return 'https://notes.inhae.blog/wp-content/uploads/2026/04/IMG_5580.png';
-    return '';
-};
-
 BookStats.generateMonthCalendar = function(year, month, booksWithDates, mastodonPosts, bookCoverMap, bookLanguageMap) {
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
@@ -354,21 +345,24 @@ BookStats.generateMonthCalendar = function(year, month, booksWithDates, mastodon
         const dayPosts = mastodonPosts && mastodonPosts[dateKey];
 
         const todayClass = isToday ? ' calendar-cell-today' : '';
-        html += `<div class="calendar-cell${todayClass}">`;
+        let cellStyle = '';
+        let finishedClass = '';
+        if (dayPosts && dayPosts.length > 0 && dayPosts.some(p => p.finished)) {
+            const bookTag = dayPosts[0].bookTag;
+            const lang = bookLanguageMap ? (bookLanguageMap[bookTag.toLowerCase()] || '') : '';
+            const color = BookStats.getLanguageColor(lang);
+            if (color) {
+                cellStyle = ` style="--finished-color: ${color}"`;
+                finishedClass = ' calendar-cell-finished';
+            }
+        }
+        html += `<div class="calendar-cell${todayClass}${finishedClass}"${cellStyle}>`;
         html += `<div class="calendar-date">${day}</div>`;
         if (dayPosts && dayPosts.length > 0) {
-            const bookTag = dayPosts[0].bookTag;
+            const finishedPost = dayPosts.find(p => p.finished);
+            const bookTag = (finishedPost || dayPosts[0]).bookTag;
             const coverUrl = bookCoverMap ? (bookCoverMap[bookTag.toLowerCase()] || '') : '';
             const isFinished = dayPosts.some(p => p.finished);
-            if (isFinished) {
-                const lang = bookLanguageMap ? (bookLanguageMap[bookTag.toLowerCase()] || '') : '';
-                const stickerUrl = BookStats.finishedStickerUrl(lang);
-                if (stickerUrl) {
-                    html += `<img class="calendar-finished-badge" src="${stickerUrl}" alt="finished">`;
-                } else {
-                    html += `<span class="calendar-finished-badge">🎉</span>`;
-                }
-            }
             html += `<button class="calendar-mastodon-btn" data-date="${dateKey}" title="${isFinished ? 'Finished: ' : ''}#${bookTag}">`;
             html += `<div class="calendar-mastodon-cover-wrap">`;
             if (coverUrl) {
@@ -377,6 +371,17 @@ BookStats.generateMonthCalendar = function(year, month, booksWithDates, mastodon
                 html += `<span class="calendar-mastodon-cover calendar-mastodon-cover-empty">🐘</span>`;
             }
             html += `</div></button>`;
+
+            const uniqueTags = [...new Set(dayPosts.map(p => p.bookTag.toLowerCase()))];
+            if (uniqueTags.length > 0) {
+                html += '<div class="calendar-dots">';
+                uniqueTags.forEach(tag => {
+                    const lang = bookLanguageMap ? (bookLanguageMap[tag] || '') : '';
+                    const color = BookStats.getLanguageColor(lang) || '#ccc';
+                    html += `<span class="calendar-dot" style="background:${color}"></span>`;
+                });
+                html += '</div>';
+            }
         }
         html += '</div>';
     }

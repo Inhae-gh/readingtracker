@@ -65,7 +65,7 @@ function loadBookstatsModules() {
     const loadPromises = requiredModules.map(module => {
         return new Promise((resolve, reject) => {
             const script = document.createElement('script');
-            script.src = baseUrl + module + '?v=21';
+            script.src = baseUrl + module + '?v=25';
             script.async = false;
             script.onload = () => resolve();
             script.onerror = () => reject(new Error(`Failed to load module: ${module}`));

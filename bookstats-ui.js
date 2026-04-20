@@ -426,8 +426,22 @@ BookStats.injectStyles = function() {
             position: relative;
             overflow: visible;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            gap: 4px;
+        }
+        .calendar-dots {
+            display: flex;
+            gap: 3px;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .calendar-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
         }
         .calendar-cell-empty {
             background-color: #f9f9f9;
@@ -452,12 +466,11 @@ BookStats.injectStyles = function() {
         }
         .calendar-mastodon-cover {
             display: block;
-            width: 38px;
-            height: 56px;
+            width: auto;
+            height: 90px;
             object-fit: cover;
             border-radius: 3px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            transition: transform 0.12s ease, box-shadow 0.12s ease;
+            transition: transform 0.12s ease;
             margin: 0 auto;
         }
         .calendar-mastodon-cover-empty {
@@ -465,7 +478,7 @@ BookStats.injectStyles = function() {
             align-items: center;
             justify-content: center;
             width: 38px;
-            height: 56px;
+            height: 90px;
             background: #f0f0f0;
             border-radius: 3px;
             font-size: 20px;
@@ -473,25 +486,25 @@ BookStats.injectStyles = function() {
         }
         .calendar-mastodon-btn:hover .calendar-mastodon-cover {
             transform: scale(1.15);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         .calendar-mastodon-cover-wrap {
             position: relative;
             display: inline-block;
-            width: 38px;
             margin: 0 auto;
         }
-        .calendar-finished-badge {
-            position: absolute;
-            top: -8px;
-            right: 8px;
-            height: 70%;
-            width: auto;
-            object-fit: contain;
-            transform: rotate(28deg);
-            transform-origin: bottom right;
-            pointer-events: none;
-            z-index: 5;
+        .calendar-cell-finished {
+            background-image:
+                linear-gradient(var(--finished-color, #ccc), var(--finished-color, #ccc)),
+                linear-gradient(var(--finished-color, #ccc), var(--finished-color, #ccc)),
+                linear-gradient(var(--finished-color, #ccc), var(--finished-color, #ccc)),
+                linear-gradient(var(--finished-color, #ccc), var(--finished-color, #ccc)),
+                linear-gradient(var(--finished-color, #ccc), var(--finished-color, #ccc)),
+                linear-gradient(var(--finished-color, #ccc), var(--finished-color, #ccc)),
+                linear-gradient(var(--finished-color, #ccc), var(--finished-color, #ccc)),
+                linear-gradient(var(--finished-color, #ccc), var(--finished-color, #ccc));
+            background-size: 15px 3px, 3px 15px, 15px 3px, 3px 15px, 15px 3px, 3px 15px, 15px 3px, 3px 15px;
+            background-position: 0 0, 0 0, 100% 0, 100% 0, 0 100%, 0 100%, 100% 100%, 100% 100%;
+            background-repeat: no-repeat;
         }
         .mastodon-popup {
             position: absolute;
