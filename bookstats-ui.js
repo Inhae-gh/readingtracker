@@ -121,6 +121,9 @@ BookStats.injectStyles = function() {
         .authors-table tbody tr:hover {
             background-color: #fafafa;
         }
+        .author-row {
+            cursor: pointer;
+        }
         .authors-count {
             text-align: right;
             font-weight: 600;
@@ -130,6 +133,141 @@ BookStats.injectStyles = function() {
             text-align: center;
             color: #777;
             padding: 20px 0;
+        }
+        .author-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            opacity: 0;
+            transition: opacity 0.18s ease;
+        }
+        .author-modal-overlay.author-modal-visible {
+            opacity: 1;
+        }
+        .author-modal-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            width: 100%;
+            max-width: 420px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateY(12px);
+            transition: transform 0.18s ease;
+        }
+        .author-modal-visible .author-modal-card {
+            transform: translateY(0);
+        }
+        .author-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid #eee;
+            flex-shrink: 0;
+        }
+        .author-modal-name {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 700;
+            color: #333;
+        }
+        .author-modal-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #888;
+            cursor: pointer;
+            padding: 4px 6px;
+            line-height: 1;
+            border-radius: 4px;
+        }
+        .author-modal-close:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        .author-modal-body {
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .author-modal-book {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .author-modal-cover {
+            width: 72px;
+            height: 108px;
+            flex-shrink: 0;
+            border-radius: 4px;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .author-modal-cover-placeholder {
+            opacity: 0.5;
+        }
+        .author-modal-details {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            min-width: 0;
+        }
+        .author-modal-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+            line-height: 1.3;
+        }
+        .author-modal-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .author-modal-lang {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .author-modal-fav {
+            font-size: 12px;
+            color: #c0844a;
+            font-weight: 600;
+        }
+        .author-modal-dates {
+            font-size: 12px;
+            color: #666;
+        }
+        .author-modal-pages {
+            font-size: 12px;
+            color: #888;
+        }
+        .author-modal-link {
+            display: inline-block;
+            margin-top: 4px;
+            font-size: 13px;
+            color: #9e6d6d;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .author-modal-link:hover {
+            text-decoration: underline;
         }
         .loading {
             text-align: center;
