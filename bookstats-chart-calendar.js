@@ -364,7 +364,7 @@ BookStats.generateMonthCalendar = function(year, month, booksWithDates, mastodon
         html += `<div class="calendar-date">${day}</div>`;
         if (dayPosts && dayPosts.length > 0) {
             const finishedPost = dayPosts.find(p => p.finished);
-            const bookTag = (finishedPost || dayPosts[0]).bookTag;
+            const bookTag = dayPosts[0].bookTag;
             const coverUrl = bookCoverMap ? (bookCoverMap[bookTag.toLowerCase()] || '') : '';
             const isFinished = dayPosts.some(p => p.finished);
             html += `<button class="calendar-mastodon-btn" data-date="${dateKey}" title="${isFinished ? 'Finished: ' : ''}#${bookTag}">`;
