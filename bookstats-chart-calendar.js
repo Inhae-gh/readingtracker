@@ -86,7 +86,9 @@ BookStats.showMastodonPopup = function(dateKey, anchorEl) {
         return;
     }
 
-    const posts = (BookStats._mastodonPostsForDay || {})[dateKey] || [];
+    const allPosts = (BookStats._mastodonPostsForDay || {})[dateKey] || [];
+    const seen = new Set();
+    const posts = allPosts.filter(p => { if (seen.has(p.url)) return false; seen.add(p.url); return true; });
     if (!posts.length) return;
 
     let html = '<div id="bookstats-mastodon-popup" class="mastodon-popup">';
