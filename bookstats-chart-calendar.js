@@ -41,21 +41,23 @@ BookStats.fetchMastodonPosts = async function(bookHashtagNames) {
             if (!statuses.length) break;
 
             statuses.forEach(status => {
-                const matchingTag = (status.tags || []).find(t => bookHashtags.has(t.name.toLowerCase()));
-                if (!matchingTag) return;
+                const matchingTags = (status.tags || []).filter(t => bookHashtags.has(t.name.toLowerCase()));
+                if (!matchingTags.length) return;
                 const date = status.created_at.slice(0, 10);
                 if (!postsByDate[date]) postsByDate[date] = [];
                 const images = (status.media_attachments || [])
                     .filter(a => a.type === 'image')
                     .map(a => ({ url: a.preview_url || a.url, alt: a.description || '' }));
                 const finished = (status.tags || []).some(t => t.name.toLowerCase() === 'finishedreading');
-                postsByDate[date].push({
-                    content: status.content,
-                    date,
-                    url: status.url,
-                    bookTag: matchingTag.name,
-                    images,
-                    finished
+                matchingTags.forEach(matchingTag => {
+                    postsByDate[date].push({
+                        content: status.content,
+                        date,
+                        url: status.url,
+                        bookTag: matchingTag.name,
+                        images,
+                        finished
+                    });
                 });
             });
 
