@@ -597,6 +597,7 @@ BookStats.injectStyles = function() {
         }
         .calendar-mastodon-btn {
             display: block;
+            width: 100%;
             background: none;
             border: none;
             padding: 0;
@@ -605,30 +606,32 @@ BookStats.injectStyles = function() {
         .calendar-mastodon-cover {
             display: block;
             width: auto;
-            height: 90px;
-            object-fit: cover;
+            height: auto;
+            max-width: 100%;
+            max-height: 80px;
             border-radius: 3px;
             transition: transform 0.12s ease;
-            margin: 0 auto;
         }
         .calendar-mastodon-cover-empty {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 38px;
-            height: 90px;
+            width: 100%;
+            height: 80px;
             background: #f0f0f0;
             border-radius: 3px;
             font-size: 20px;
-            margin: 0 auto;
         }
         .calendar-mastodon-btn:hover .calendar-mastodon-cover {
             transform: scale(1.15);
         }
         .calendar-mastodon-cover-wrap {
             position: relative;
-            display: inline-block;
-            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 80px;
         }
         .calendar-cell-finished {
             background-image:
